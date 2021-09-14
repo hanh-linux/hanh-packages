@@ -1,0 +1,21 @@
+name=toybox
+ver=0.8.5
+home="https://github.com/landley/toybox"
+sources="https://codeload.github.com/landley/toybox/tar.gz/refs/tags/0.8.5"
+depends=""
+
+unpack-pkg(){
+cd $workdir
+tar -xf ../0.8.5
+}
+
+compile-pkg(){
+cd $workdir/$name-$ver
+make defconfig
+make
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make PREFIX=$pkgdir install
+}
