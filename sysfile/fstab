@@ -1,0 +1,2 @@
+# /etc/fstab
+# <filesystem> <directory> <type> <options> <dump> <fsck>
