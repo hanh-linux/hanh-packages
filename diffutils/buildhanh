@@ -2,7 +2,7 @@ name=diffutils
 ver=3.8
 desc="Tool for showing text differences"
 homepage="https://www.gnu.org/software/diffutils/"
-depends=""
+depends="musl sh"
 
 sources="https://ftp.gnu.org/gnu/diffutils/diffutils-3.8.tar.xz"
 

@@ -1,5 +1,6 @@
 name=toybox
 ver=0.8.5
+desc="Multi-call small binary"
 home="https://github.com/landley/toybox"
 sources="https://codeload.github.com/landley/toybox/tar.gz/refs/tags/0.8.5"
 depends=""
