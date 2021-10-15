@@ -4,6 +4,7 @@ desc="Multi-call small binary"
 home="https://github.com/landley/toybox"
 sources="https://codeload.github.com/landley/toybox/tar.gz/refs/tags/0.8.5"
 depends=""
+build_flag="full"
 
 unpack-pkg(){
 cd $workdir
@@ -13,6 +14,12 @@ tar -xf ../0.8.5
 compile-pkg(){
 cd $workdir/$name-$ver
 make defconfig
+make
+}
+
+compile-pkg_full(){
+cd $workdir/$name-$ver
+cp -r $hanhdir/config . 
 make
 }
 

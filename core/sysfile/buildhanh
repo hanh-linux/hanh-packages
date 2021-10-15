@@ -14,7 +14,7 @@ done
 
 install -dvm0750 root
 
-for x in $need_files; do
+for x in $needed; do
 install -Dvm644 ../$x etc/$x
 done 
 
