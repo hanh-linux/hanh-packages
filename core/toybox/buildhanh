@@ -19,7 +19,7 @@ make
 
 compile-pkg_full(){
 cd $workdir/$name-$ver
-cp -r $hanhdir/config . 
+cp -r $hanhdir/config .config 
 make
 }
 
