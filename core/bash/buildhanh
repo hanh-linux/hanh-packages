@@ -1,0 +1,37 @@
+name=bash
+ver=5.1.8
+desc="GNU Bourne Again SHell"
+homepage="https://www.gnu.org/software/bash/"
+license="GPL"
+depends="netbsd-curses musl"
+sources="https://ftp.gnu.org/gnu/$name/$name-$ver.tar.gz"
+contain="sh"
+needed="$name-$ver.tar.gz"
+build_flag="no-gettext"
+
+unpack-pkg() {
+cd $workdir 
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile-pkg_no-gettext(){
+cd $workdir/$name-$ver
+./configure --prefix=/usr --without-bash-malloc --without-included-gettext
+make
+}
+
+compile-pkg(){
+contain="$contain gettext"
+cd $workdir/$name-$ver
+./configure --prefix=/usr --without-bash-malloc 
+make
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR="$pkgdir" install
+cd $pkgdir
+install -dm755 $pkgdir/bin/ 
+ln -sf bash bin/sh 
+}
+

@@ -5,6 +5,7 @@ ver="29.09.2021"
 desc="Port of NetBSD's curses library for POSIX systems"
 home="https://github.com/sabotage-linux/netbsd-curses"
 provides="libcurses libterminfo"
+license="BSD"
 depends="sh"
 build_bin="git"
 
