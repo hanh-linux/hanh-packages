@@ -1,7 +1,0 @@
-Name: attr
-Version: 2.5.1
-Description: Extended attribute support library for ACL support
-Depends: musl 
-Contain: xfsattr
-Homepage: https://savannah.nongnu.org/projects/attr
-License: LGPL
