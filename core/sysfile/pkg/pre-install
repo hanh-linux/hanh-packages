@@ -1,7 +1,0 @@
-name="sysfile"
-version="17.09.21"
-desc="System base files and folders"
-depends=""
-lib=""
-contain=""
-pkg_infodir="var/lib/pachanh/system/sysfile"

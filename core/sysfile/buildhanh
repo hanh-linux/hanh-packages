@@ -15,7 +15,7 @@ done
 install -dvm0750 root
 
 for x in $needed; do
-install -Dvm644 ../$x etc/$x
+install -Dvm644 $hanhdir/$x etc/$x
 done 
 
 ln -svf proc/self/mounts etc/mtab

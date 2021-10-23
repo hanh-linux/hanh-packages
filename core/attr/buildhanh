@@ -1,0 +1,29 @@
+# Reference: Linux From Scratch, Glaucus cerata
+
+name="attr"
+ver="2.5.1"
+desc="Extended attribute support library for ACL support"
+home="https://savannah.nongnu.org/projects/attr"
+license="LGPL"
+contain="xfsattr"
+depends="musl"
+ignore_files="etc/xattr.conf"
+sources="https://download.savannah.nongnu.org/releases/$name/$name-$ver.tar.xz"
+needed="$name-$ver.tar.xz"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+# CHOST must be specified by using --host=
+./configure --prefix=/usr --sysconfdir=/etc
+make 
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

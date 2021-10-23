@@ -1,0 +1,8 @@
+name="attr"
+version="2.5.1"
+desc="Extended attribute support library for ACL support"
+depends="musl"
+lib=""
+contain="xfsattr"
+ignore_files="etc/xattr.conf"
+pkg_infodir="var/lib/pachanh/system/attr"

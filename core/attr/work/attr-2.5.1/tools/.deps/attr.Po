@@ -1,0 +1,62 @@
+tools/attr.o: tools/attr.c \
+ /home/user/mussel/sysroot/usr/include/stdc-predef.h include/config.h \
+ /home/user/mussel/sysroot/usr/include/sys/types.h \
+ /home/user/mussel/sysroot/usr/include/features.h \
+ /home/user/mussel/sysroot/usr/include/bits/alltypes.h \
+ /home/user/mussel/sysroot/usr/include/endian.h \
+ /home/user/mussel/sysroot/usr/include/sys/select.h \
+ /home/user/mussel/sysroot/usr/include/sys/param.h \
+ /home/user/mussel/sysroot/usr/include/sys/resource.h \
+ /home/user/mussel/sysroot/usr/include/sys/time.h \
+ /home/user/mussel/sysroot/usr/include/bits/resource.h \
+ /home/user/mussel/sysroot/usr/include/limits.h \
+ /home/user/mussel/sysroot/usr/include/bits/limits.h \
+ /home/user/mussel/sysroot/usr/include/sys/stat.h \
+ /home/user/mussel/sysroot/usr/include/bits/stat.h \
+ /home/user/mussel/sysroot/usr/include/stdio.h \
+ /home/user/mussel/sysroot/usr/include/fcntl.h \
+ /home/user/mussel/sysroot/usr/include/bits/fcntl.h \
+ /home/user/mussel/sysroot/usr/include/stdlib.h \
+ /home/user/mussel/sysroot/usr/include/alloca.h \
+ /home/user/mussel/sysroot/usr/include/unistd.h \
+ /home/user/mussel/sysroot/usr/include/bits/posix.h \
+ /home/user/mussel/sysroot/usr/include/errno.h \
+ /home/user/mussel/sysroot/usr/include/bits/errno.h \
+ /home/user/mussel/sysroot/usr/include/string.h \
+ /home/user/mussel/sysroot/usr/include/strings.h \
+ /home/user/mussel/sysroot/usr/include/locale.h include/attr/attributes.h \
+ /home/user/mussel/sysroot/usr/include/stdint.h \
+ /home/user/mussel/sysroot/usr/include/bits/stdint.h include/misc.h \
+ include/nls.h
+/home/user/mussel/sysroot/usr/include/stdc-predef.h:
+include/config.h:
+/home/user/mussel/sysroot/usr/include/sys/types.h:
+/home/user/mussel/sysroot/usr/include/features.h:
+/home/user/mussel/sysroot/usr/include/bits/alltypes.h:
+/home/user/mussel/sysroot/usr/include/endian.h:
+/home/user/mussel/sysroot/usr/include/sys/select.h:
+/home/user/mussel/sysroot/usr/include/sys/param.h:
+/home/user/mussel/sysroot/usr/include/sys/resource.h:
+/home/user/mussel/sysroot/usr/include/sys/time.h:
+/home/user/mussel/sysroot/usr/include/bits/resource.h:
+/home/user/mussel/sysroot/usr/include/limits.h:
+/home/user/mussel/sysroot/usr/include/bits/limits.h:
+/home/user/mussel/sysroot/usr/include/sys/stat.h:
+/home/user/mussel/sysroot/usr/include/bits/stat.h:
+/home/user/mussel/sysroot/usr/include/stdio.h:
+/home/user/mussel/sysroot/usr/include/fcntl.h:
+/home/user/mussel/sysroot/usr/include/bits/fcntl.h:
+/home/user/mussel/sysroot/usr/include/stdlib.h:
+/home/user/mussel/sysroot/usr/include/alloca.h:
+/home/user/mussel/sysroot/usr/include/unistd.h:
+/home/user/mussel/sysroot/usr/include/bits/posix.h:
+/home/user/mussel/sysroot/usr/include/errno.h:
+/home/user/mussel/sysroot/usr/include/bits/errno.h:
+/home/user/mussel/sysroot/usr/include/string.h:
+/home/user/mussel/sysroot/usr/include/strings.h:
+/home/user/mussel/sysroot/usr/include/locale.h:
+include/attr/attributes.h:
+/home/user/mussel/sysroot/usr/include/stdint.h:
+/home/user/mussel/sysroot/usr/include/bits/stdint.h:
+include/misc.h:
+include/nls.h:

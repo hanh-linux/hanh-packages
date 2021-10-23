@@ -1,0 +1,30 @@
+# Reference: Arch Linux svntogit-packages; Linux From Scratch; Glaucus cerata
+
+name=acl
+ver=2.3.1
+desc="GNU Access Control List"
+license="LGPL"
+home="https://savannah.nongnu.org/projects/acl"
+sources="http://download.savannah.nongnu.org/releases/$name/$name-$ver.tar.xz"
+contain="xfsacl"
+depends="attr"
+lib="libattr.so"
+needed="$name-$ver.tar.xz"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile-pkg() {
+# --with-sysroot option may need to be specified 
+cd $workdir/$name-$ver
+./configure --prefix=/usr
+sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+make 
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR="$pkgdir" install
+}
