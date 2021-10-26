@@ -1,0 +1,31 @@
+# Reference: Linux From Scratch
+
+basename=linux-libre
+name=$basename-headers
+ver=5.14.13
+_dirname=linux-$ver
+contain=linux-headers
+license="GPL"
+home="https://www.fsfla.org/ikiwiki/selibre/linux-libre/"
+sources="http://linux-libre.flossmirror.org/releases/$ver-gnu/$basename-$ver-gnu.tar.xz"
+needed="$basename-$ver-gnu.tar.xz"
+
+unpack-pkg() {
+cd $workdir/
+tar -xf ../$basename-$ver-gnu.tar.xz
+}
+
+compile-pkg() {
+cd $workdir/$_dirname
+make mrproper 
+make headers
+find usr/include -name '.*' -delete
+rm usr/include/Makefile
+}
+
+make-pkg() {
+cd $workdir/$_dirname
+install -dm755 $pkgdir/usr
+cp -r usr/include $pkgdir/usr
+}
+

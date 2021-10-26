@@ -1,0 +1,29 @@
+# Reference: Arch Linux
+
+name=pkgconf
+ver=1.7.3
+desc="A program which helps to configure compiler and linker flags"
+home="https://git.sr.ht/~kaniini/pkgconf"
+license="ISC"
+depends="musl sh"
+build_bin="autoconf autoreconf automake libtool"
+sources="https://git.sr.ht/~kaniini/pkgconf/archive/$name-$ver.tar.gz"
+needed="$name-$ver.tar.gz"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+mv -v $name-$name-$ver $name-$ver
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+./autogen.sh
+./configure --prefix=/usr
+make
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR="$pkgdir" install
+}

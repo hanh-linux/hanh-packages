@@ -17,7 +17,7 @@ tar -xf $hanhdir/$name-$ver.tar.xz
 }
 
 compile-pkg() {
-# --with-sysroot option may need to be specified 
+# For cross-compiling, --with-sysroot option may need to be specified 
 cd $workdir/$name-$ver
 ./configure --prefix=/usr
 sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool

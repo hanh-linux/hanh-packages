@@ -1,0 +1,29 @@
+# Reference: Artix Linux
+
+name=openrc
+ver=0.44.7
+desc="Gentoo init daemon"
+home="https://github.com/OpenRC/openrc"
+license="BSD"
+build_bin="meson"
+sources="https://github.com/OpenRC/openrc/archive/refs/tags/$ver.tar.gz"
+ignore_files="etc/rc.conf"
+needed="$ver.tar.gz"
+
+unpack-pkg() {
+cd $workdir/
+tar -xf $hanhdir/$ver.tar.gz
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+
+meson setup -Dos=Linux -Drootprefix=/usr -Dprefix=/usr -Dpam=false -Dsysvinit=true -Dpkgconfig=true -Dtermcap='' -Dbash-completions=false -Dzsh-completions=false -Dsplit-usr=false -Dnewnet=false -Daudit=disabled -Dselinux=disabled -Dlibrcdir=openrc build
+
+meson compile -C build
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+meson install -C build --destdir=$pkgdir
+}

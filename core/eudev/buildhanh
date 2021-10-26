@@ -1,0 +1,32 @@
+# Reference: Linux From Scratch
+
+name=eudev
+ver=3.2.10
+_git=v$ver
+license="GPL"
+desc="A standalone systemd-udev fork"
+home="https://github.com/eudev-project/eudev"
+sources="https://github.com/eudev-project/$name/archive/refs/tags/$_git.tar.gz"
+build_bin="autoreconf gperf sed blkid"
+contain="udev"
+needed="$_git.tar.gz 0001-Disable-manpages.patch"
+
+unpack-pkg() {
+cd $workdir/
+tar -xf $hanhdir/$_git.tar.gz
+cd $workdir/$name-$ver
+patch -Np0 -i $hanhdir/0001-Disable-manpages.patch
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+./autogen.sh
+# --host=$CHOST and --with-sysroot= must be specified for cross-compilation
+./configure --prefix=/usr --sysconfdir=/etc
+make
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

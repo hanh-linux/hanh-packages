@@ -1,0 +1,30 @@
+# Reference: Arch Linux, Glaucus Linux, Linux From Scratch
+
+name=shadow
+ver=4.9
+desc="Password and account management tools"
+home="https://github.com/shadow-maint/shadow"
+license="BSD"
+depends="libcap acl"
+ignore_files="etc/login.defs"
+sources="https://github.com/shadow-maint/shadow/releases/download/v$ver/$name-$ver.tar.xz"
+needed="$name-$ver.tar.xz"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+cd $name-$ver
+sed -e "224s/rounds/min_rounds/" -i libmisc/salt.c
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+# --with-sysroot may need to specify for cross-compiling
+./configure --sysconfdir=/etc --with-group-name-max-length=32 --with-sysroot=/home/user/mussel/sysroot
+make
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,27 @@
+Reference: Linux From Scratch
+
+name=libcap
+ver=2.60
+desc="POSIX capabilities"
+home="https://sites.google.com/site/fullycapable/"
+license="GPL2"
+depends="musl"
+sources="https://cdn.kernel.org/pub/linux/libs/security/linux-privs/${name}2/$name-$ver.tar.xz"
+needed=$name-$ver.tar.xz
+
+unpack-pkg() {
+cd $workdir/
+tar -xf $hanhdir/$name-$ver.tar.xz
+cd $name-$ver
+sed -i '/install -m.*STA/d' libcap/Makefile
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+make prefix=/usr lib=lib
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir prefix=/usr lib=lib install
+}

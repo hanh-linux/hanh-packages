@@ -1,0 +1,31 @@
+# Reference: Alpine Linux, Glaucus Linux, Linux From Scratch 
+
+name=procps-ng
+_dirname=procps
+ver=3.3.17
+desc="Ulitities for monitoring the system processes"
+home="https://gitlab.com/procps-ng/procps"
+license="GPL LGPL"
+depends="musl netbsd-curses"
+sources="https://prdownloads.sourceforge.net/$name/$name-$ver.tar.xz"
+needed="$name-$ver.tar.xz 0001-Alpine-musl-fixes.patch"
+
+unpack-pkg() {
+cd $workdir/
+tar -xf $hanhdir/$name-$ver.tar.xz
+cd $workdir/$_dirname-$ver
+patch -Np0 -i $hanhdir/0001-Alpine-musl-fixes.patch
+}
+
+compile-pkg() {
+cd $workdir/$_dirname-$ver
+./configure --prefix=/usr                            \
+            --disable-static --disable-kill --disable-w
+
+make
+}
+
+make-pkg() {
+cd $workdir/$_dirname-$ver
+make DESTDIR=$pkgdir install
+}
