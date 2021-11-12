@@ -1,0 +1,34 @@
+name=linux
+ver=5.10.77
+desc="Linux kernel"
+home="https://kernel.org"
+sources=""https://cdn.kernel.org/pub/linux/kernel/v5.x/$name-$ver.tar.xz
+depends="kmod initcpio"
+build_bin="bc cpio kmod tar xz"
+# installed libelf, musl-fts, musl-obstack, argp-standalone and some headers required for building elf
+needed="$name-$ver.tar.xz config"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+cd $name-$ver
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- mrproper
+cp -r $hanhdir/config .config
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- olddefconfig
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- prepare
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver 
+make V=1 ARCH=x86_64 CROSS_COMPILE=$CHOST- -j2 > build.log 2>&1
+}
+
+make-pkg() {
+cd $pkgdir 
+install -dm755 $pkgdir/boot/
+
+cd $workdir/$name-$ver
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- INSTALL_MOD_PATH="$pkgdir/" INSTALL_MOD_STRIP=1 modules_install
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- INSTALL_PATH="$pkgdir/boot" -j2 install
+}
+
