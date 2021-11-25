@@ -1,0 +1,38 @@
+# Using Alpine Linux kernel configuration
+
+name=linux
+ver=5.10.77
+desc="Linux kernel"
+home="https://kernel.org"
+sources="https://cdn.kernel.org/pub/linux/kernel/v5.x/$name-$ver.tar.xz \
+https://git.alpinelinux.org/aports/plain/main/linux-lts/config-lts.x86_64"
+depends="kmod initcpio"
+build_bin="bc cpio kmod tar xz"
+# libelf, musl-fts, musl-obstack, argp-standalone and alpine-headers must be installed as compling depends. The next version of pachanh will support make depends
+needed="$name-$ver.tar.xz config-lts.x86_64"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+cd $name-$ver
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- mrproper
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- defconfig 
+cp -r $hanhdir/config-lts.x86_64 .config
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- olddefconfig
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- prepare | tee prepare.log
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver 
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- -j2 | tee make.log
+}
+
+make-pkg() {
+cd $pkgdir 
+install -dm755 $pkgdir/boot/
+
+cd $workdir/$name-$ver
+make ARCH=x86_64 CROSS_COMPILE=$CHOST- INSTALL_MOD_PATH="$pkgdir/" INSTALL_MOD_STRIP=1 modules_install
+install -Dm755 arch/x86/boot/bzImage $pkgdir/boot/vmlinuz
+}
+

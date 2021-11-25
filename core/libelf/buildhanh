@@ -1,0 +1,55 @@
+# Huge thanks to Alpine Linux and isoft-linux for patches
+
+_name=elfutils
+ver=0.185
+desc="ELF utilities"
+home="https://sourceware.org/elfutils"
+license="GPL3 LGPL3"
+sources="https://sourceware.org/elfutils/ftp/elfutils-latest.tar.bz2 \
+https://git.alpinelinux.org/aports/plain/main/elfutils/error.h \
+https://git.alpinelinux.org/aports/plain/main/elfutils/musl-macros.patch"
+lib="libargp.a"
+needed="$_name-latest.tar.bz2 error.h musl-macros.patch"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$_name-latest.tar.bz2
+cd $_name-$ver/ 
+for x in lib etc; do
+ cp -r $hanhdir/error.h $x
+done
+patch -Np1 -i $hanhdir/musl-macros.patch
+}
+
+compile-pkg() {
+LDFLAGS="$LDFLAGS,-L/home/user/mussel/toolchain/x86_64-linux-musl/lib"
+CFLAGS="$CFLAGS -Wno-error"
+cd $workdir/$_name-$ver
+./configure --prefix=/usr --build=$CHOST --disable-debuginfod --disable-libdebuginfod --disable-werror
+make -j2 
+}
+
+make-pkg_libelf() {
+name=libelf
+desc="$desc (libraries)"
+
+cd $workdir/$_name-$ver/ 
+make DESTDIR="$pkgdir" install
+rm -rvf $pkgdir/etc/ $pkgdir/usr/bin $pkgdir/usr/share
+}
+
+make-pkg_elfutils() {
+name=elfutils
+desc="$desc (utilties)"
+depends="libelf"
+
+cd $workdir/$_name-$ver
+make DESTDIR=$pkgdir install
+rm -rf $pkgdir/usr/include $pkgdir/usr/lib
+# Copied from Arch
+rm -rvf "${pkgdir}/usr/bin/debuginfod"* \
+    "${pkgdir}/usr/share/man/man1/debuginfod"* \
+    "${pkgdir}/usr/share/man/man3/debuginfod"* \
+    "${pkgdir}/usr/share/man/man8/" \
+    "${pkgdir}/etc"
+}

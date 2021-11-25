@@ -1,0 +1,22 @@
+# Reference: Arch Linux, Linux From Scratch
+
+name=iana-etc
+ver=20210611
+desc="Data for network protocols and services"
+home="https://iana.org/protocols"
+license="public domain"
+sources="https://github.com/Mic92/$name/releases/download/$ver/$name-$ver.tar.gz"
+ignore_files="etc/protocols etc/services"
+needed="$name-$ver.tar.gz"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+install -dm755 $pkgdir/etc
+install -Dm644 services $pkgdir/etc/services
+install -Dm644 protocols $pkgdir/etc/protocols
+}

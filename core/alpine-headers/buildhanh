@@ -1,0 +1,17 @@
+name=alpine-headers
+ver=0.7.2
+desc="musl-compatible headers provided by Alpine Linux"
+home="https://alpinelinux.org"
+license="BSD"
+sources="https://git.alpinelinux.org/aports/plain/main/libc-dev/sys-cdefs.h  \
+https://git.alpinelinux.org/aports/plain/main/libc-dev/sys-queue.h    \
+https://git.alpinelinux.org/aports/plain/main/libc-dev/sys-tree.h"
+needed="sys-cdefs.h sys-queue.h sys-tree.h"
+
+make-pkg() {
+cd $pkgdir
+install -dm755 usr/include/sys
+install -Dm755 $hanhdir/sys-cdefs.h usr/include/sys/cdefs.h
+install -Dm755 $hanhdir/sys-queue.h usr/include/sys/queue.h
+install -Dm755 $hanhdir/sys-tree.h  usr/include/sys/tree.h
+}

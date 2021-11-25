@@ -1,0 +1,28 @@
+name=fts
+_name=musl-fts
+ver=1.2.7
+desc="fts functions that are not provided by musl"
+home="https://github.com/void-linux/musl-fts"
+license="GPL"
+depends="musl"
+build_bin="libtoolize aclocal autoconf autoheader automake"
+sources="https://github.com/void-linux/musl-fts/archive/refs/tags/v$ver.tar.gz"
+needed="v$ver.tar.gz"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/v$ver.tar.gz
+cd $_name-$ver
+./bootstrap.sh
+}
+
+compile-pkg() {
+cd $workdir/$_name-$ver
+./configure --prefix=/usr 
+make
+}
+
+make-pkg() {
+cd $workdir/$_name-$ver
+make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,26 @@
+# Reference: Glaucus Linux, Arch Linux
+
+name=zstd
+ver=1.5.0
+desc="Zstandard"
+home="https://github.com/facebook/$name"
+license="GPL2 BSD"
+depends="musl"
+sources="https://github.com/facebook/$name/releases/download/v$ver/$name-$ver.tar.gz"
+needed="$name-$ver.tar.gz"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+export CFLAGS=$(echo $CFLAGS | sed "s/-fno-exceptions/ /g")
+make 
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir prefix=/usr install
+}
