@@ -15,16 +15,15 @@ unpack-pkg() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 cd $name-$ver
-make ARCH=x86_64 CROSS_COMPILE=$CHOST- mrproper
-make ARCH=x86_64 CROSS_COMPILE=$CHOST- defconfig 
+make mrproper
 cp -r $hanhdir/config-lts.x86_64 .config
-make ARCH=x86_64 CROSS_COMPILE=$CHOST- olddefconfig
-make ARCH=x86_64 CROSS_COMPILE=$CHOST- prepare | tee prepare.log
+make olddefconfig
+make prepare | tee prepare.log
 }
 
 compile-pkg() {
 cd $workdir/$name-$ver 
-make ARCH=x86_64 CROSS_COMPILE=$CHOST- -j2 | tee make.log
+make | tee make.log
 }
 
 make-pkg() {
