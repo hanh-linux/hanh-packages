@@ -1,8 +1,8 @@
 name="sysfile"
-ver="17.09.21"
+ver="26.11.21"
 desc="System base files and folders"
 
-needed="fstab group hosts issue passwd profile shells"
+needed="fstab group hosts issue passwd profile shells os-release"
 need_dir="bin boot dev etc home lib lib64 mnt opt proc run sbin sys tmp usr var usr/bin usr/sbin usr/lib usr/lib64 usr/share usr/share/sysfile usr/src usr/include usr/local/bin usr/local/sbin usr/local/lib usr/local/lib64 usr/local/share usr/share/include usr/local/etc usr/local/src var/cache var/local var/log var/mail var/opt var/spool"
 
 make-pkg(){ 
