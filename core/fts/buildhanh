@@ -18,6 +18,8 @@ cd $_name-$ver
 
 compile-pkg() {
 cd $workdir/$_name-$ver
+# We need -fPIC flag so that elfutils won't fail in compiling libdw.so  
+CFLAGS="$CFLAGS -fPIC"
 ./configure --prefix=/usr 
 make
 }

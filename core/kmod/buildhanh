@@ -1,28 +1,36 @@
 # Reference: Glaucus Linux, Linux From Scratch, Void Linux
 name=kmod
-ver=29
+ver=29-1
+_ver=29
 desc="Kernel module management tools"
 home=https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 license="GPL"
 depends="musl"
-sources="https://cdn.kernel.org/pub/linux/utils/kernel/$name/$name-$ver.tar.xz"
-needed="$name-$ver.tar.xz 0001-Void-stdout.patch"
+sources="https://cdn.kernel.org/pub/linux/utils/kernel/$name/$name-$_ver.tar.xz"
+needed="$name-$_ver.tar.xz 0001-Void-stdout.patch"
+_args="--prefix=/usr --sysconfdir=/etc --bindir=/sbin" # for cross-complication, use --with-sysroot=
 
 unpack-pkg() {
 cd $workdir
-tar -xf $hanhdir/$name-$ver.tar.xz
-cd $name-$ver
+tar -xf $hanhdir/$name-$_ver.tar.xz
+cd $name-$_ver
 patch -Np1 -i $hanhdir/0001-Void-stdout.patch
 }
 
 compile-pkg(){
-cd $workdir/$name-$ver
-./configure --prefix=/usr --sysconfdir=/etc 
+cd $workdir/$name-$_ver
+eval ./configure "${_args}"
 make
 }
 
+compile-pkg_full() {
+add_makedeps xz zlib 
+_args="${_args} --with-xz --with-zlib --with-zstd --with-openssl"
+compile-pkg
+}
+
 make-pkg() {
-cd $workdir/$name-$ver
+cd $workdir/$name-$_ver
 make DESTDIR=$pkgdir install
 cd $pkgdir
 install -dm755 $pkgdir/sbin
