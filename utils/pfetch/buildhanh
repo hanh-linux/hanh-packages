@@ -1,0 +1,21 @@
+# Maintainer: <th1nhhdk@tutanota.com>
+
+name=pfetch
+ver=0.6.0-3
+desc="A pretty system information tool written in POSIX sh."
+home="https://github.com/dylanaraps/$name"
+depends="bash"
+sources="$home/archive/refs/tags/0.6.0.tar.gz"
+contain="pfetch-git"
+needed="0.6.0.tar.gz"
+
+unpack-pkg(){
+cd $workdir
+tar -xf $hanhdir/0.6.0.tar.gz
+}
+
+make-pkg(){
+cd $workdir/$name-0.6.0/
+install -Dm755 "$workdir/$name-0.6.0/pfetch" "$pkgdir/usr/bin/pfetch"
+install -Dm644 "$workdir/$name-0.6.0/LICENSE.md" "$pkgdir/usr/share/licenses/$name/LICENSE"
+}

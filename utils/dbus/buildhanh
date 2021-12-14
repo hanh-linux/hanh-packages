@@ -1,0 +1,56 @@
+name=dbus
+ver=1.12.20
+desc="Freedesktop.org message bus system"
+url="https://www.freedesktop.org/Software/dbus"
+license="AFL2.1 GPL2"
+contain="libdbus"
+build_bin="automake aclocal autoconf libtool" # need GNU autoconf-archive
+makedeps="expat"
+sources="https://dbus.freedesktop.org/releases/$name/$name-$ver.tar.gz"
+needed="$name-$ver.tar.gz dbus.initd dbus.confd"
+
+unpack-pkg(){
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+cd $name-$ver
+NOCONFIGURE=1 ./autogen.sh
+}
+_args="     --target=$CHOST                      \
+            --prefix=/usr                        \
+            --sysconfdir=/etc                    \
+            --localstatedir=/var                 \
+            --disable-doxygen-docs               \
+            --disable-xml-docs                   \
+            --disable-static                     \
+            --with-systemduserunitdir=no         \
+            --with-systemdsystemunitdir=no       \
+            --docdir=/usr/share/doc/$name-$ver   \
+            --with-console-auth-dir=/run/console \
+            --with-system-pid-file=/run/dbus/pid \
+            --disable-systemd                    \
+            --with-x=no                          \
+            --disable-modular-tests              \
+            --with-system-socket=/run/dbus/system_bus_socket \
+"
+
+compile-pkg() {
+cd $workdir/$name-$ver
+eval ./configure $_args
+make
+}
+
+compile-pkg_elogind() {
+echo "elogind_support=1" >> $hanhdir/.buildinfo
+add_makedeps elogind
+_args="$_args --enable-user-session"
+compile-pkg
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+install -dm755 $pkgdir/etc/init.d
+install -Dm755 $hanhdir/dbus.initd $pkgdir/etc/init.d/dbus
+install -dm755 $pkgdir/etc/conf.d
+install -Dm755 $hanhdir/dbus.confd $pkgdir/etc/conf.d/dbus
+}

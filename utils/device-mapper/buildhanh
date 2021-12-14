@@ -1,0 +1,56 @@
+name=device-mapper
+_name=lvm2
+ver=2.03.14
+desc="Device mapper userspace library and tools"
+home="https://sourceware.org/dm/"
+license="GPL2 LGPL2.1"
+depends="libaio bash"
+contains="libdevmapper libdevmapper-event"
+sources="https://mirrors.kernel.org/sourceware/lvm2/LVM2.$ver.tgz"
+needed="LVM2.$ver.tgz dmeventd.initd                                 \
+        fix-stdio-usage.patch library_dir-default-config.patch       \
+        mallinfo.patch mlockall-default-config.patch                 "
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/LVM2.$ver.tgz
+mv LVM2* $_name-$ver
+cd $_name-$ver
+patch -Np1 -i $hanhdir/fix-stdio-usage.patch
+patch -Np1 -i $hanhdir/library_dir-default-config.patch
+patch -Np1 -i $hanhdir/mallinfo.patch
+patch -Np1 -i $hanhdir/mlockall-default-config.patch
+}
+
+compile-pkg() {
+cd $workdir/$_name-$ver
+
+export ac_cv_func_malloc_0_nonnull=yes
+export ac_cv_func_realloc_0_nonnull=yes
+
+# configure args are taken and modified from Alpine Linux
+bash ./configure \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--enable-static_link \
+		--disable-nls \
+		--disable-readline \
+		--enable-pkgconfig \
+		--enable-applib \
+		--with-thin=internal \
+		--enable-dmeventd \
+		--enable-cmdlib \
+		--enable-udev_rules --disable-readline \
+		CLDFLAGS="$LDFLAGS"
+# Build and install script are taken from Ataraxia Linux
+make SHELL=bash device-mapper 
+}
+
+make-pkg() {
+cd $workdir/$_name-$ver
+make -j1 SHELL=bash DESTDIR=$pkgdir install_device-mapper
+install -dm755 $pkgdir/etc/init.d
+install -Dm755 $hanhdir/dmeventd.initd $pkgdir/etc/init.d/dmeventd
+}

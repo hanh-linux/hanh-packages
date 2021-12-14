@@ -1,0 +1,23 @@
+name=libmnl
+ver=1.0.4
+desc="Minimalistic user-space library"
+home="https://www.netfilter.org/projects/libmnl/index.html"
+license="LGPL2"
+sources="https://netfilter.org/projects/$name/files/$name-$ver.tar.bz2"
+needed="$name-$ver.tar.bz2"
+
+unpack-pkg() {
+cd $workdir/
+tar -xf $hanhdir/$name-$ver.tar.bz2
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+./configure --prefix=/usr --enable-static
+make
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

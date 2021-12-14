@@ -1,0 +1,49 @@
+# File modified from AUR - lilo. 
+# Original by Alonso Rodriguez, Connor Behan, Eric Belanger and judd 
+
+name=lilo
+ver=24.2
+desc="A bootloader for Linux"
+home="https://alioth.debian.org/projects/lilo/"
+license='BSD'
+depends="udev device-mapper"
+sources="https://alioth-archive.debian.org/releases/lilo/Lilo/${ver}/${name}-${ver}.tar.gz "
+needed="$name-$ver.tar.gz 01_makefile-adds.patch 03_keytab-lilo.8-debian-based.patch 05_readme.disk-change.patch 06_notinteractive.patch 11_fix-gcc-10.patch lilo-24.1-remove__GLIBC__.patch lilo-24.1-remove-O_ACCMODE.patch"
+
+unpack-pkg(){
+  cd $workdir
+  tar -xf $hanhdir/$name-$ver.tar.gz 
+  cd $workdir/$name-$ver
+  patch -Np1 -i $hanhdir/01_makefile-adds.patch
+  patch -Np1 -i $hanhdir/03_keytab-lilo.8-debian-based.patch
+  patch -Np1 -i $hanhdir/05_readme.disk-change.patch
+  patch -Np1 -i $hanhdir/06_notinteractive.patch
+  patch -Np1 -i $hanhdir/11_fix-gcc-10.patch
+  patch -Np1 -i $hanhdir/lilo-24.1-remove__GLIBC__.patch
+  patch -Np1 -i $hanhdir/lilo-24.1-remove-O_ACCMODE.patch
+}
+
+compile-pkg() {
+  cd $workdir/$name-$ver
+  export LC_ALL=C
+
+  sed -i Makefile src/Makefile \
+		-e '/strip/d;s|^	make|	$(MAKE)|g' \
+		-e '/images install/d' \
+		-e '/images all/d'
+  make CC="$CC" all 
+}
+
+make-pkg() {
+  cd $workdir/$name-$ver
+  make DESTDIR=$pkgdir install
+
+  # Remove Debian specific files
+  rm -rf "${pkgdir}"/etc/initramfs
+  rm -rf "${pkgdir}"/etc/kernel
+
+  # Remove other things you *probably* do not need (comment if you need them)
+  rm -rf "${pkgdir}"/boot/*.bmp
+  rm -rf "${pkgdir}"/boot/*.dat
+}
+

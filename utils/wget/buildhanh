@@ -1,0 +1,25 @@
+name=wget
+ver="1.21.2"
+desc="Utility for retrieve file from Internet"
+home="https://www.gnu.org/software/wget/wget.html"
+license="GPL"
+depends="openssl"
+sources="https://ftp.gnu.org/gnu/$name/$name-$ver.tar.gz"
+needed="$name-$ver.tar.gz"
+
+unpack-pkg() {
+cd $workdir/
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+./configure --build=$CHOST --host=$CHOST --prefix=/usr --sysconfdir=/etc --with-ssl=openssl --without-libpsl --disable-pcre2 --without-libidn    
+make
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}
+

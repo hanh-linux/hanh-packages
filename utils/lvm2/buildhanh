@@ -1,0 +1,59 @@
+name=lvm2
+ver=2.03.14
+desc="Logical Volume Manager 2 utilities"
+home="https://sourceware.org/lvm2/"
+license="GPL2 LGPL2.1"
+depends="libaio device-mapper bash"
+sources="https://mirrors.kernel.org/sourceware/lvm2/LVM2.$ver.tgz"
+needed="LVM2.$ver.tgz lvm.initd lvm.confd                            \
+        fix-stdio-usage.patch library_dir-default-config.patch       \
+        mallinfo.patch mlockall-default-config.patch                 "
+ignore_files="etc/lvm/lvm.conf etc/lvm/lvmlocal.conf"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/LVM2.$ver.tgz
+mv LVM2* $name-$ver
+cd $name-$ver
+for x in $hanhdir/*.patch; do
+patch -Np1 -i $x
+done
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+
+export ac_cv_func_malloc_0_nonnull=yes
+export ac_cv_func_realloc_0_nonnull=yes
+
+# configure args are taken and modified from Alpine Linux
+bash ./configure \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--enable-static_link \
+		--disable-nls \
+		--disable-readline \
+		--enable-pkgconfig \
+		--enable-applib \
+		--with-thin=internal \
+		--enable-dmeventd \
+		--enable-cmdlib \
+		--enable-udev_rules --disable-readline \
+		CLDFLAGS="$LDFLAGS"
+# Build and install script are taken from Ataraxia Linux
+make SHELL=bash
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make -j1 SHELL=bash DESTDIR=$pkgdir install_lvm2
+install -dm755 $pkgdir/etc/lvm/archive
+install -dm755 $pkgdir/etc/lvm/backup
+rm -rf $pkgdir/usr/lib/systemd
+install -dm755 $pkgdir/etc/init.d
+install -Dm755 $hanhdir/lvm2.initd $pkgdir/etc/init.d/lvm2
+install -dm755 $hanhdir/etc/conf.d
+install -Dm755 $hanhdir/lvm2.confd $pkgdir/etc/conf.d/lvm2
+}

@@ -1,0 +1,26 @@
+name=mtools
+ver=4.0.36
+desc="A collection of utilities to access MS-DOS disks from GNU and Unix without mounting them"
+home="https://www.gnu.org/software/mtools/"
+license=GPL
+sources="ftp://ftp.gnu.org/gnu/$name/$name-$ver.tar.gz  \
+https://git.alpinelinux.org/aports/plain/main/mtools/fix-uninitialized.patch"
+needed="$name-$ver.tar.gz fix-uninitialized.patch"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+cd $name-$ver
+patch -Np1 -i $hanhdir/fix-uninitialized.patch
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+./configure --prefix=/usr --without-x
+make
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,23 @@
+name=squashfs-tools
+ver=4.5
+desc="Tool for working with squashfs compression"
+home="https://github.com/plougher/$name"
+license="GPL2"
+depends="xz zstd"
+sources="https://github.com/plougher/$name/archive/refs/tags/$ver.tar.gz"
+needed="$ver.tar.gz"
+
+unpack-pkg() {
+cd $workdir
+tar -xf $hanhdir/$ver.tar.gz
+}
+
+compile-pkg() {
+cd $workdir/$name-$ver
+make -C $name GZIP_SUPPORT=1 XZ_SUPPORT=1 LZMA_XZ_SUPPORT=1 ZSTD_SUPPORT=1 # since toybox contains gzip
+}
+
+make-pkg() {
+cd $workdir/$name-$ver
+make -C $name install INSTALL_DIR=$pkgdir/bin
+}
