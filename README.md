@@ -1,4 +1,2 @@
 # hanh-packages
-The `buildhanh` files and ISO files will be located here.
-
-Huge thanks to [firasuke](https://github.com/firasuke), [protonesso](https://gitlab.com/protonesso) and [basednerd](https://github.com/basedace) for supporting Hanh Linux.
+The packages build files are here. Newer ISO releases will be at [hanh-linux/hanh-linux](https://github.com/hanh-linux/hanh-linux/releases)
