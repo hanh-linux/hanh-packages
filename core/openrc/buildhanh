@@ -1,7 +1,7 @@
 # Reference: Artix Linux
 
 name=openrc
-ver=0.44.7
+ver=0.44.8
 desc="Gentoo init daemon"
 home="https://github.com/OpenRC/openrc"
 license="BSD"
@@ -18,7 +18,7 @@ tar -xf $hanhdir/$ver.tar.gz
 compile-pkg() {
 cd $workdir/$name-$ver
 
-meson setup -Dos=Linux -Drootprefix=/usr -Dprefix=/usr -Dpam=false -Dsysvinit=true -Dpkgconfig=true -Dtermcap='' -Dbash-completions=false -Dzsh-completions=false -Dsplit-usr=false -Dnewnet=false -Daudit=disabled -Dselinux=disabled -Dlibrcdir=openrc build
+meson setup -Dbranding="\"Hanh Linux\"" -Dos=Linux -Dpam=false -Dsysvinit=true -Dpkgconfig=true -Dtermcap='' -Dbash-completions=false -Dzsh-completions=false -Dsplit-usr=true -Dnewnet=false -Daudit=disabled -Dselinux=disabled build
 
 meson compile -C build
 }

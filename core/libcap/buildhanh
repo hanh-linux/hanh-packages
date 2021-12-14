@@ -1,4 +1,4 @@
-Reference: Linux From Scratch
+# Reference: Linux From Scratch
 
 name=libcap
 ver=2.60
@@ -18,10 +18,11 @@ sed -i '/install -m.*STA/d' libcap/Makefile
 
 compile-pkg() {
 cd $workdir/$name-$ver
-make prefix=/usr lib=lib
+make CC=x86_64-linux-musl-gcc BUILD_CC=gcc CFLAGS="$CFLAGS -fPIC" prefix=/usr lib=lib PAM_CAP=no GOLANG=no
 }
 
 make-pkg() {
 cd $workdir/$name-$ver
-make DESTDIR=$pkgdir prefix=/usr lib=lib install
+make CC=x86_64-linux-musl-gcc BUILD_CC=gcc CFLAGS="$CFLAGS -fPIC" prefix=/usr lib=lib PAM_CAP=no GOLANG=no DESTDIR=$pkgdir install
+chmod 755 $pkgdir/usr/lib/libcap.so.$ver
 }
