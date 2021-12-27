@@ -18,11 +18,12 @@ sed -i '/install -m.*STA/d' libcap/Makefile
 
 compile-pkg() {
 cd $workdir/$name-$ver
-make CC=x86_64-linux-musl-gcc BUILD_CC=gcc CFLAGS="$CFLAGS -fPIC" prefix=/usr lib=lib PAM_CAP=no GOLANG=no
+# For cross-compiling, CC= and BUILD_CC= are required
+make CFLAGS="$CFLAGS -fPIC" prefix=/usr lib=lib PAM_CAP=no GOLANG=no
 }
 
 make-pkg() {
 cd $workdir/$name-$ver
-make CC=x86_64-linux-musl-gcc BUILD_CC=gcc CFLAGS="$CFLAGS -fPIC" prefix=/usr lib=lib PAM_CAP=no GOLANG=no DESTDIR=$pkgdir install
+make CFLAGS="$CFLAGS -fPIC" prefix=/usr lib=lib PAM_CAP=no GOLANG=no DESTDIR=$pkgdir install
 chmod 755 $pkgdir/usr/lib/libcap.so.$ver
 }
