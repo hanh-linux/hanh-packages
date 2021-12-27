@@ -6,9 +6,10 @@ ver=0.186
 desc="ELF libraries"
 home="https://sourceware.org/elfutils"
 license="GPL3 LGPL3"
-sources="https://sourceware.org/$name/ftp/$ver/$name-$ver.tar.bz2 \
+sources="https://sourceware.org/$_name/ftp/$ver/$_name-$ver.tar.bz2 \
 https://git.alpinelinux.org/aports/plain/main/elfutils/error.h \
 https://git.alpinelinux.org/aports/plain/main/elfutils/musl-macros.patch"
+depends="zlib"
 makedeps="fts musl-obstack argp-standalone"
 needed="$_name-$ver.tar.bz2 error.h musl-macros.patch"
 
@@ -23,7 +24,7 @@ patch -Np1 -i $hanhdir/musl-macros.patch
 }
 
 compile-pkg() {
-# For cross-compiling, use --host=$CHOST and do not set LIBS flags since elfutils may have some errors with it
+# For cross-compiling, use --host= and do not set LIBS flags since elfutils may have some errors with it
 CFLAGS="$CFLAGS -Wno-error -fPIC"
 cd $workdir/$_name-$ver
 ./configure --prefix=/usr --disable-debuginfod --disable-libdebuginfod
