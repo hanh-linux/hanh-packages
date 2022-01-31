@@ -2,26 +2,47 @@ name="sysfile"
 ver="26.11.21"
 desc="System base files and folders"
 
-needed="fstab group hosts issue passwd profile shells os-release"
-_etc=${needed#os-release}
-need_dir="bin boot dev etc home lib lib64 mnt opt proc run sbin sys tmp usr var usr/bin usr/sbin usr/lib usr/lib64 usr/share usr/share/sysfile usr/src usr/include usr/local/bin usr/local/sbin usr/local/lib usr/local/lib64 usr/local/share usr/share/include usr/local/etc usr/local/src var/cache var/local var/log var/mail var/opt var/spool"
+attach="fstab group hosts issue passwd profile shells"
+config="etc/fstab etc/group etc/hosts etc/issue etc/passwd etc/profile etc/shells etc/os-release"
+task="mkpkg"
+files="$attach"
+_etc=${files#os-release}
+need_dir="boot dev etc home mnt opt proc run sys tmp \
+	usr var usr/bin usr/lib usr/share usr/share/sysfile \
+	usr/src usr/include usr/local/bin usr/local/sbin \
+	usr/local/lib usr/local/lib64 usr/local/share \
+	usr/share/include usr/local/etc usr/local/src \
+	var/cache var/local var/log var/mail var/opt var/spool"
 
-make-pkg(){ 
+
+mkpkg(){ 
 cd $pkgdir
 
-for x in $need_dir; do
-install -dvm755 $x
+for dir in $need_dir; do
+install -dvm755 $dir
 done
 
-install -dvm0750 root
+install -dvm750 root/
 
-for x in $_etc; do
-install -Dvm644 $hanhdir/$x etc/$x
+for file in $_etc; do
+install -Dvm644 $hanhdir/$file etc/$file
 done 
 
 install -Dvm644 $hanhdir/os-release usr/lib/os-release
 
-cd etc/
+for binlink in bin sbin ; do
+ln -svf usr/bin $binlink
+done
+
+for liblink in lib lib64 ; do
+	ln -svf usr/lib $liblink
+done
+
+cd $pkgdir/etc/
 ln -svf ../usr/lib/os-release os-release
 ln -svf ../proc/self/mounts mtab
+
+cd $pkgdir/usr
+ln -svf lib lib64
+ln -svf bin sbin
 }

@@ -10,10 +10,10 @@ sources="https://sourceware.org/$_name/ftp/$ver/$_name-$ver.tar.bz2 \
 https://git.alpinelinux.org/aports/plain/main/elfutils/error.h \
 https://git.alpinelinux.org/aports/plain/main/elfutils/musl-macros.patch"
 depends="zlib"
-makedeps="fts musl-obstack argp-standalone"
-needed="$_name-$ver.tar.bz2 error.h musl-macros.patch"
+makedeps="fts musl-obstack argp-standalone alpine-headers"
+files="$_name-$ver.tar.bz2 error.h musl-macros.patch"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$_name-$ver.tar.bz2
 cd $_name-$ver/ 
@@ -23,15 +23,19 @@ done
 patch -Np1 -i $hanhdir/musl-macros.patch
 }
 
-compile-pkg() {
-# For cross-compiling, use --host= and do not set LIBS flags since elfutils may have some errors with it
+compile() {
 CFLAGS="$CFLAGS -Wno-error -fPIC"
 cd $workdir/$_name-$ver
-./configure --prefix=/usr --disable-debuginfod --disable-libdebuginfod
+./configure \
+	--host=$CHOST\
+	--build=$CBUILD \
+	--prefix=/usr \
+	--disable-debuginfod \
+	--disable-libdebuginfod
 make 
 }
 
-make-pkg_libelf() {
+mkpkg() {
 cd $workdir/$_name-$ver/ 
 make DESTDIR="$pkgdir" install
 rm -rvf $pkgdir/etc/ $pkgdir/usr/bin $pkgdir/usr/share

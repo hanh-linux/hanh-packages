@@ -1,29 +1,47 @@
 # Reference: Artix Linux
 
 name=openrc
-ver=0.44.8
+ver=0.44.10
 desc="Gentoo init daemon"
 home="https://github.com/OpenRC/openrc"
 license="BSD"
-build_bin="meson"
+mkdeps="meson"
 sources="https://github.com/OpenRC/openrc/archive/refs/tags/$ver.tar.gz"
-ignore_files="etc/rc.conf"
+config="etc/rc.conf"
 needed="$ver.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir/
 tar -xf $hanhdir/$ver.tar.gz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 
-meson setup -Dbranding="\"Hanh Linux\"" -Dos=Linux -Dpam=false -Dsysvinit=true -Dpkgconfig=true -Dtermcap='' -Dbash-completions=false -Dzsh-completions=false -Dsplit-usr=true -Dnewnet=false -Daudit=disabled -Dselinux=disabled build
+meson setup \
+	--prefix /usr \
+	--libexecdir lib \
+	--sbindir bin \
+	--buildtype plain \
+	-Drootprefix=/usr \
+	-Dshell=/bin/sh \
+	-Dbranding="\"Hanh Linux\"" \
+	-Dos=Linux \
+	-Dpam=false \
+	-Dsysvinit=true \
+	-Dpkgconfig=true \
+	-Dtermcap='' \
+	-Dbash-completions=false \
+	-Dzsh-completions=false \
+	-Dsplit-usr=true \
+	-Dnewnet=false \
+	-Daudit=disabled \
+	-Dselinux=disabled build
 
 meson compile -C build
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 meson install -C build --destdir=$pkgdir
 }

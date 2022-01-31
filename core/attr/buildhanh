@@ -7,23 +7,25 @@ home="https://savannah.nongnu.org/projects/attr"
 license="LGPL"
 contain="xfsattr"
 depends="musl"
-ignore_files="etc/xattr.conf"
+config="etc/xattr.conf"
 sources="https://download.savannah.nongnu.org/releases/$name/$name-$ver.tar.xz"
-needed="$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
-# CHOST must be specified by using --host=
-./configure --prefix=/usr --sysconfdir=/etc
+./configure --host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr \
+	--sysconfdir=/etc
 make 
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 }

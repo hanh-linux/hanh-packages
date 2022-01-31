@@ -1,0 +1,54 @@
+Add support for config.mak and disable overwriting build commands
+
+--- Makefile	2021-10-01 03:27:40.000000000 +0700
++++ fixes/Makefile	2022-01-30 19:00:41.768267291 +0700
+@@ -32,6 +32,10 @@
+ # To put more focus on warnings, be less verbose as default
+ # Use 'make V=1' to see the full commands
+ 
++## Hanh Linux: I hate busybox overwrites system build command 
++## Adding ?= to all build vars and include config.mak for building
++-include config.mak
++
+ ifdef V
+   ifeq ("$(origin V)", "command line")
+     KBUILD_VERBOSE = $(V)
+@@ -271,8 +275,8 @@
+ # Look for make include files relative to root of kernel src
+ MAKEFLAGS += --include-dir=$(srctree)
+ 
+-HOSTCC  	= gcc
+-HOSTCXX  	= g++
++HOSTCC  	?= gcc
++HOSTCXX  	?= g++
+ HOSTCFLAGS	:=
+ HOSTCXXFLAGS	:=
+ # We need some generic definitions
+@@ -288,17 +292,17 @@
+ 
+ # Make variables (CC, etc...)
+ 
+-AS		= $(CROSS_COMPILE)as
+-CC		= $(CROSS_COMPILE)gcc
+-LD		= $(CC) -nostdlib
+-CPP		= $(CC) -E
+-AR		= $(CROSS_COMPILE)ar
+-NM		= $(CROSS_COMPILE)nm
+-STRIP		= $(CROSS_COMPILE)strip
+-OBJCOPY		= $(CROSS_COMPILE)objcopy
+-OBJDUMP		= $(CROSS_COMPILE)objdump
++AS		?= $(CROSS_COMPILE)as
++CC		?= $(CROSS_COMPILE)gcc
++LD		?= $(CC) -nostdlib
++CPP		?= $(CC) -E
++AR		?= $(CROSS_COMPILE)ar
++NM		?= $(CROSS_COMPILE)nm
++STRIP		?= $(CROSS_COMPILE)strip
++OBJCOPY		?= $(CROSS_COMPILE)objcopy
++OBJDUMP		?= $(CROSS_COMPILE)objdump
+ PKG_CONFIG	?= $(CROSS_COMPILE)pkg-config
+-AWK		= awk
++AWK		?= awk
+ GENKSYMS	= scripts/genksyms/genksyms
+ DEPMOD		= /sbin/depmod
+ KALLSYMS	= scripts/kallsyms

@@ -4,23 +4,23 @@ name="netbsd-curses"
 ver="29.09.2021"
 desc="Port of NetBSD's curses library for POSIX systems"
 home="https://github.com/sabotage-linux/netbsd-curses"
-provides="libcurses libterminfo"
+contain="libcurses libterminfo"
 license="BSD"
 depends="sh"
-build_bin="git"
+mkdeps="git"
 
-unpack-pkg() {
+unpack() {
         cd "$workdir"
         # Use git snapshot instead of the release due to compile errors with `tic`
         git clone https://github.com/sabotage-linux/netbsd-curses.git
 }
 
-compile-pkg() {
+compile() {
 	cd $workdir/$name
 	make PREFIX="/usr"
 }
 
-make-pkg() {
+mkpkg() {
 	cd "$workdir/$name"
 	make DESTDIR=$pkgdir PREFIX=/usr install
 	}

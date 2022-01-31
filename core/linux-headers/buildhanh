@@ -1,25 +1,28 @@
 name=linux-headers
 _name=linux
-ver=5.10.77
+ver=5.15.16 
 desc="Linux kernel headers"
 home="https://kernel.org"
 license="GPL"
 sources="https://cdn.kernel.org/pub/linux/kernel/v5.x/$_name-$ver.tar.xz"
-needed="$_name-$ver.tar.xz"
+files="$_name-$ver.tar.xz"
 
-unpack-pkg(){
+unpack(){
 cd $workdir/
 tar -xf $hanhdir/$_name-$ver.tar.xz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$_name-$ver
-make ARCH=x86_64 mrproper
-make ARCH=x86_64 headers
+make CC=$CC mrproper
+make CC=$CC ARCH=x86_64 headers
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$_name-$ver
-make ARCH=x86_64 INSTALL_HDR_PATH=$pkgdir/usr headers_install
+make \
+	ARCH=x86_64 \
+	INSTALL_HDR_PATH=$pkgdir/usr \
+	headers_install
 }
 

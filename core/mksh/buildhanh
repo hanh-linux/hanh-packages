@@ -1,0 +1,25 @@
+name=mksh
+ver=R59c
+desc="MirBSD Korn Shell"
+home='https://www.mirbsd.org/mksh.htm'
+license="custom"
+contain="sh"
+sources=https://www.mirbsd.org/MirOS/dist/mir/mksh/$name-$ver.tgz
+files="$name-$ver.tgz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tgz
+}
+
+compile() {
+cd $workdir/$name
+sh Build.sh -r 
+}
+
+mkpkg() {
+cd $workdir/$name
+install -Dm755 mksh $pkgdir/usr/bin/mksh
+install -Dm644 dot.mkshrc $pkgdir/etc/skel/.mkshrc
+ln -sf mksh $pkgdir/usr/bin/sh
+}

@@ -1,7 +1,7 @@
 # Reference: Linux From Scratch
 
 name=libcap
-ver=2.60
+ver=2.62
 desc="POSIX capabilities"
 home="https://sites.google.com/site/fullycapable/"
 license="GPL2"
@@ -9,21 +9,32 @@ depends="musl"
 sources="https://cdn.kernel.org/pub/linux/libs/security/linux-privs/${name}2/$name-$ver.tar.xz"
 needed=$name-$ver.tar.xz
 
-unpack-pkg() {
+unpack() {
 cd $workdir/
 tar -xf $hanhdir/$name-$ver.tar.xz
 cd $name-$ver
 sed -i '/install -m.*STA/d' libcap/Makefile
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
-# For cross-compiling, CC= and BUILD_CC= are required
-make CFLAGS="$CFLAGS -fPIC" prefix=/usr lib=lib PAM_CAP=no GOLANG=no
+if test -z "$HOSTCC"; then
+	HOSTCC=$CC 
+fi
+make \
+	CFLAGS="$CFLAGS -fPIC" \
+	CC=$CC BUILD_CC=$HOSTCC \
+	prefix=/usr lib=lib \
+	PAM_CAP=no GOLANG=no
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
-make CFLAGS="$CFLAGS -fPIC" prefix=/usr lib=lib PAM_CAP=no GOLANG=no DESTDIR=$pkgdir install
+make \
+	CFLAGS="$CFLAGS -fPIC" \
+	CC=$CC BUILD_CC=$HOSTCC \
+	prefix=/usr lib=lib \
+	PAM_CAP=no GOLANG=no \
+	DESTDIR=$pkgdir install
 chmod 755 $pkgdir/usr/lib/libcap.so.$ver
 }

@@ -8,19 +8,19 @@ license="BSD"
 depends="musl"
 contain="gettext"
 sources="http://ftp.barfooze.de/pub/sabotage/tarballs/$name-$ver.tar.xz"
-needed="$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 make LIBINTL=MUSL
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make LIBINTL=MUSL DESTDIR=$pkgdir prefix=/usr install
 }

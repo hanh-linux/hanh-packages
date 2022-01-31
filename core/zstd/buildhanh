@@ -1,26 +1,26 @@
 # Reference: Glaucus Linux, Arch Linux
 
 name=zstd
-ver=1.5.0
-desc="Zstandard"
+ver=1.5.1
+desc="Zstandard - a fast decompression archive type"
 home="https://github.com/facebook/$name"
 license="GPL2 BSD"
-depends="musl"
+depends="musl xz zlib"
 sources="https://github.com/facebook/$name/releases/download/v$ver/$name-$ver.tar.gz"
-needed="$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.gz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 export CFLAGS=$(echo $CFLAGS | sed "s/-fno-exceptions/ /g")
 make 
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir prefix=/usr install
 }

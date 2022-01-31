@@ -6,38 +6,53 @@ _ver=2.37
 desc="Miscellanous utility programs for Linux"
 home="https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git/"
 license="GPL"
+mkdeps="netbsd-curses"
 sources="https://www.kernel.org/pub/linux/utils/util-linux/v${_ver}/$name-$ver.tar.xz"
-needed="$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
-# With netbsd-curses, LDFLAGS must contain "-lcurses -lterminfo" for compilation
-# With cross-compiling, --with-sysroot= must be specified
-LDFLAGS="$LDFLAGS -lcurses -lterminfo" ./configure ADJTIME_PATH=/var/lib/hwclock/adjtime    --host=$CHOST --disable-more \
-            --disable-chfn-chsh  \
-            --disable-login      \
-            --disable-nologin    \
-            --disable-su         \
-            --disable-setpriv    \
-            --disable-runuser    \
-            --disable-pylibmount \
-            --disable-static     \
-            --without-python     \
-            --without-systemd    \
-            --without-systemdsystemunitdir \
-            runstatedir=/run
+# Disable more.c since it is not compatible with netbsd-curses
+LDFLAGS="$LDFLAGS -lcurses -lterminfo -static" \
+       	./configure ADJTIME_PATH=/var/lib/hwclock/adjtime \
+	--prefix=/usr \
+	--libdir=/usr/lib \
+	--bindir=/usr/bin \
+	--sbindir=/usr/bin \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--disable-more \
+        --disable-chfn-chsh  \
+        --disable-login      \
+        --disable-nologin    \
+        --disable-su         \
+        --disable-setpriv    \
+        --disable-runuser    \
+        --disable-pylibmount \
+        --disable-static     \
+        --without-python     \
+        --without-systemd    \
+        --without-systemdsystemunitdir \
+	--localstatedir=/var \
+        runstatedir=/run
 make 
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
-# util-linux requires root permission for chgrp 
+# util-linux requires root permission for chgrp
+if test -z "$GETROOT"; then
+	GETROOT=doas
+fi
+
 eval $GETROOT make DESTDIR=$pkgdir install
-# Should we change its permission? 
-# eval $GETROOT chmod 777 $pkgdir
+eval $GETROOT chown -Rv $USER $pkgdir
+cd $pkgdir/usr
+mv sbin/* bin/
+rm -rf sbin
 }

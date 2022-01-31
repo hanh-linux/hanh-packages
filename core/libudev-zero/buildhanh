@@ -1,0 +1,29 @@
+name=libudev-zero
+ver=29.01.2022
+desc="Daemonless replacement for libudev"
+home="https://github.com/illiliti/libudev-zero"
+license="GPL"
+contain="libudev"
+mkdeps="git"
+
+unpack() {
+cd $workdir 
+git clone https://github.com/illiliti/libudev-zero
+}
+
+compile() {
+cd $workdir/$name
+make \
+	PREFIX=/usr \
+	LIBDIR=/usr/lib \
+	INCLUDEDIR=/usr/include
+}
+
+mkpkg() {
+cd $workdir/$name
+make \
+	PREFIX=/usr \
+	LIBDIR=/usr/lib \
+	INCLUDEDIR=/usr/include \
+	DESTDIR=$pkgdir install
+}

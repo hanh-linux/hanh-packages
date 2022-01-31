@@ -5,22 +5,20 @@ home="https://tukaani.org/xz"
 license="GPL LGPL custom"
 depends="sh"
 sources="https://tukaani.org/$name/$name-$ver.tar.gz"
-needed="$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.gz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 ./configure --prefix=/usr
 make
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
-# Remove the xzcat provided by toybox
-rm -rf $pkgdir/usr/bin/xzcat
 }

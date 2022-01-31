@@ -7,22 +7,27 @@ desc="An interpreter for the AWK Programming Language"
 home="http://invisible-island.net/mawk/"
 license="GPL2"
 sources="https://invisible-island.net/datafiles/release/$name.tar.gz"
+contain="awk"
 depends="musl"
-needed="$name.tar.gz"
+files="$name.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir/
 tar -xf $hanhdir/$name.tar.gz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
-# For cross-compiling, use --build= option
-./configure --prefix=/usr --without-man2html  
+./configure --prefix=/usr \
+	--without-man2html \
+	--host=$CHOST \
+	--build=$CBUILD 
 make
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
+cd $pkgdir/usr/bin
+ln -sf mawk awk 
 }

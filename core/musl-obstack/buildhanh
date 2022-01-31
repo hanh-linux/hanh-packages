@@ -3,24 +3,24 @@ ver=1.2.2
 desc="Fork of glibc's obstack"
 home="https://github.com/void-linux/musl-obstack"
 license="BSD"
-build_bin="autoconf automake libtool"
+mkdeps="autoconf automake libtool"
 sources="https://github.com/void-linux/musl-obstack/archive/refs/tags/v$ver.tar.gz"
-needed="v$ver.tar.gz"
+files="v$ver.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/v$ver.tar.gz
 cd $name-$ver
 ./bootstrap.sh
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 ./configure --prefix=/usr
 make
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 }

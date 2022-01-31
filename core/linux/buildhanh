@@ -1,37 +1,51 @@
 # Using Alpine Linux kernel configuration
 
 name=linux
-ver=5.10.77
+ver=5.15.16
 desc="Linux kernel"
 home="https://kernel.org"
+license="GPL"
 sources="https://cdn.kernel.org/pub/linux/kernel/v5.x/$name-$ver.tar.xz \
 https://git.alpinelinux.org/aports/plain/main/linux-lts/config-lts.x86_64"
 depends="kmod initcpio"
-build_bin="bc cpio kmod tar xz"
-# libelf, musl-fts, musl-obstack, argp-standalone and alpine-headers must be installed as compling depends. The next version of pachanh will support make depends
-needed="$name-$ver.tar.xz config-lts.x86_64"
+mkdeps="argp-standalone musl-obstack fts alpine-headers \
+	lsb-tools bc linux-headers openssl awk bash \
+	gmake bison perl" 
+attach="0001-pick-up-system-variables.patch"
+files="$name-$ver.tar.xz config-lts.x86_64 $attach"
 
-unpack-pkg() {
+misc="$(echo $misc | sed 's/ //g')"
+case $misc in 
+	cross ) cross="CROSS_COMPILE=$CHOST-"
+esac
+
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 cd $name-$ver
+patch -Np0 -i $hanhdir/0001-pick-up-system-variables.patch
 make mrproper
 cp -r $hanhdir/config-lts.x86_64 .config
 make olddefconfig
-make prepare | tee prepare.log
+make prepare 
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver 
-make | tee make.log
+make \
+	ARCH=$CARCH LLVM=yes $CROSS 
 }
 
-make-pkg() {
+mkpkg() {
 cd $pkgdir 
 install -dm755 $pkgdir/boot/
 
 cd $workdir/$name-$ver
-make ARCH=x86_64 CROSS_COMPILE=$CHOST- INSTALL_MOD_PATH="$pkgdir/" INSTALL_MOD_STRIP=1 modules_install
+make \
+	ARCH=$CARCH LLVM=yes $CROSS \
+	INSTALL_MOD_PATH="$pkgdir/usr" \
+	INSTALL_MOD_STRIP=1 \
+	modules_install
 install -Dm755 arch/x86/boot/bzImage $pkgdir/boot/vmlinuz
 }
 

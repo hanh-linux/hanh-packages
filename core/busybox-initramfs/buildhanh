@@ -3,27 +3,47 @@ _name=busybox
 ver=1.34.1
 desc="Multicall binary for initramfs"
 home="https://busybox.net"
+attach="0001-no-overwriting-build-command.patch"
 license="GPL"
 sources="https://busybox.net/downloads/$_name-$ver.tar.bz2"
-needed="$_name-$ver.tar.bz2"
+files="$_name-$ver.tar.bz2 $attach"
 
-unpack-pkg() {
+unpack() {
 cd $workdir/
 tar -xf $hanhdir/$_name-$ver.tar.bz2
+cd $_name-$ver
+patch -Np0 -i $hanhdir/0001-no-overwriting-build-command.patch
 }
 
-compile-pkg() {
-echo $CC $HOSTCC 
+compile() {
 cd $workdir/$_name-$ver
-# For cross-compiling, use ARCH= CROSS_COMPILE= 
+misc="$(echo $misc | sed 's/ //g')"
+if test "$misc" = "cross"; then
+	echo "Cross-compilation is enabled"
+	sleep 2
+	CROSS="CROSS_COMPILE=$CHOST-"
+fi
 
-make ARCH=x86_64 CROSS_COMPILE=$CHOST- defconfig
-make ARCH=x86_64 CROSS_COMPILE=$CHOST-
+if test -z "$HOSTCC"; then
+	HOSTCC="$CC"
+fi
+
+if test -z "$HOSTLD"; then
+	HOSTLD="$LD"
+fi
+
+make ARCH=x86_64 $CROSS defconfig
+make ARCH=x86_64 $CROSS 
 }
 
-make-pkg() {
-install -dm755 $pkgdir/usr/share/gen-initramfs/$name
+mkpkg() {
 cd $workdir/$_name-$ver
-make ARCH=x86_64 CROSS_COMPILE=$CHOST- CONFIG_PREFIX=$pkgdir/usr/share/gen-initramfs/$name install
+make ARCH=x86_64 $CROSS \
+	CONFIG_PREFIX=$pkgdir/usr/share/gen-initramfs/$name install
 rm -rf $pkgdir/usr/share/gen-initramfs/$name/linuxrc
+cd $pkgdir/usr/share/gen-initramfs/$name
+for bindir in bin sbin usr/sbin; do
+	mv $bindir/* usr/bin
+	rm -rf $bindir 
+done
 }

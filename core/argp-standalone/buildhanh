@@ -4,24 +4,26 @@ desc="A standalone fork of glibc argp"
 home="https://github.com/ericonr/argp-standalone"
 license="LGPL"
 sources="https://github.com/ericonr/argp-standalone/archive/refs/tags/$ver.tar.gz"
-bin="autoreconf"
+mkdeps="autoconf automake libtool"
 needed="$ver.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir/
 tar -xf $hanhdir/$ver.tar.gz
 cd $name-$ver
 autoreconf -fiv
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 CFLAGS="$CFLAGS -fPIC"
-./configure --prefix=/usr --host=$CHOST --build=$CHOST
+./configure --prefix=/usr \
+	--host=$CHOST \
+	--build=$CBUILD
 make 
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 install -Dm644 argp.h $pkgdir/usr/include/argp.h
 install -Dm755 libargp.a $pkgdir/usr/lib/libargp.a

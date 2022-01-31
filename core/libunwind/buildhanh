@@ -1,0 +1,59 @@
+name=llvm-libunwind
+ver=13.0.0
+desc="C programming interface (API) to determine the call-chain of a program"
+home="https://llvm.org"
+license="Apache 2.0 with LLVM exception"
+contain="libunwind"
+depends="cmake"
+# LLVM is a little complicated since it requires
+# a monopoly layout to build projects -_-
+sources="https://github.com/llvm/llvm-project/releases/download/llvmorg-$ver/llvm-project-$ver.src.tar.xz" 
+files="llvm-project-$ver.src.tar.xz"
+
+misc="$(echo $misc | sed 's/ //g')"
+case $misc in 
+	"ninja"	)	
+		cmd="ninja";
+		filetype="Ninja";;
+	"make"	)
+		cmd="make";
+		filetype="Unix Makefiles";;
+	"data"  ) 
+		echo "Data build, ignoring";;
+	*	)
+		die "Mode $misc is not supported by this build file";;
+esac
+
+
+
+unpack() {
+# CMake supports several build systems, but we
+# will support only Ninja and Makefile
+if test -z "$nodeps"; then
+	check_deps $cmd
+fi
+
+cd $workdir 
+tar -xf $hanhdir/llvm-project-$ver.src.tar.xz
+}
+
+compile() {
+cd $workdir/llvm-project-$ver.src/libunwind
+cmake -S . -B build \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DLIBUNWIND_USE_COMPILER_RT=ON \
+	-Wno-dev -G "$filetype"
+eval $cmd -C build || ninja
+}
+
+mkpkg() {
+cd $workdir/llvm-project-$ver.src/libunwind
+eval DESTDIR=$pkgdir $cmd -C build install || exit 1
+
+# Install some headers for LLVM build
+install -dm755 $pkgdir/usr/include
+for header in __libunwind_config.h libunwind.h unwind.h; do
+	install -Dm644 include/$header $pkgdir/usr/include/$header
+done	
+install -Dm644 include/mach-o/compact_unwind_encoding.h $pkgdir/usr/include/mach-o/compact_unwind_encoding.h
+}

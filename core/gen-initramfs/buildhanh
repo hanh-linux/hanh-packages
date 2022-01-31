@@ -2,11 +2,12 @@ name=gen-initramfs
 ver=1.0
 desc="Hanh Linux tool for generating initramfs"
 license="None"
-depends="busybox-initramfs cpio"
+depends="busybox-initramfs "
 contain="initcpio"
-needed="gen-initramfs init.in"
+files="gen-initramfs init.in"
+task="mkpkg"
 
-make-pkg() {
+mkpkg() {
 cd $pkgdir
 install -dm755 usr/bin 
 install -dm755 usr/share/$name

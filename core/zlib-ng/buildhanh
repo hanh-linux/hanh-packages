@@ -1,26 +1,27 @@
 # Reference: AUR
 
 name=zlib-ng
-ver=2.0.5
+ver=2.0.6
 desc="zlib replacement with optimizations" 
 home="https://github.com/zlib-ng/zlib-ng"
 license="Zlib"
 contain="zlib"
 sources="https://github.com/zlib-ng/$name/archive/refs/tags/$ver.tar.gz"
-needed="$ver.tar.gz"
+files="$ver.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$ver.tar.gz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
-./configure --prefix=/usr --zlib-compat
+./configure --prefix=/usr \
+       --zlib-compat
 make 
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 }

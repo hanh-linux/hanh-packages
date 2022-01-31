@@ -7,35 +7,37 @@ home=https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 license="GPL"
 depends="musl"
 sources="https://cdn.kernel.org/pub/linux/utils/kernel/$name/$name-$_ver.tar.xz"
-needed="$name-$_ver.tar.xz 0001-Void-stdout.patch"
-_args="--prefix=/usr --sysconfdir=/etc --bindir=/sbin" # for cross-complication, use --with-sysroot=
+attach="0001-Void-stdout.patch"
+files="$name-$_ver.tar.xz $attach"
+_args="--prefix=/usr --sysconfdir=/etc" 
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$_ver.tar.xz
 cd $name-$_ver
 patch -Np1 -i $hanhdir/0001-Void-stdout.patch
 }
 
-compile-pkg(){
+compile(){
 cd $workdir/$name-$_ver
 eval ./configure "${_args}"
 make
 }
 
-compile-pkg_full() {
-add_makedeps xz zlib 
+compile_full() {
+if test -z "$nodeps"; then
+	check_deps zstd openssl xz zlib
+fi	
 _args="${_args} --with-xz --with-zlib --with-zstd --with-openssl"
-compile-pkg
+compile
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$_ver
 make DESTDIR=$pkgdir install
 cd $pkgdir
-install -dm755 $pkgdir/sbin
 for target in depmod insmod lsmod modinfo modprobe rmmod; do
- ln -svf kmod sbin/$target
+ ln -svf kmod usr/bin/$target
 done
 
 }

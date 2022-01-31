@@ -5,20 +5,23 @@ home="https://nano-editor.org"
 license="GPL"
 depends="sh netbsd-curses"
 sources="https://www.nano-editor.org/dist/v5/$name-$ver.tar.xz"
-needed="$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
-./configure --prefix=/usr --sysconfdir=/etc --enable-utf8 
+./configure \
+	--prefix=/usr \
+	--sysconfdir=/etc \
+	--enable-utf8 
 make
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 }

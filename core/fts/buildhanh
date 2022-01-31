@@ -5,18 +5,18 @@ desc="fts functions that are not provided by musl"
 home="https://github.com/void-linux/musl-fts"
 license="GPL"
 depends="musl"
-build_bin="libtoolize aclocal autoconf autoheader automake"
+mkdeps="autoconf automake libtool"
 sources="https://github.com/void-linux/musl-fts/archive/refs/tags/v$ver.tar.gz"
 needed="v$ver.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/v$ver.tar.gz
 cd $_name-$ver
 ./bootstrap.sh
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$_name-$ver
 # We need -fPIC flag so that elfutils won't fail in compiling libdw.so  
 CFLAGS="$CFLAGS -fPIC"
@@ -24,7 +24,7 @@ CFLAGS="$CFLAGS -fPIC"
 make
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$_name-$ver
 make DESTDIR=$pkgdir install
 }

@@ -7,15 +7,15 @@ home="https://e2fsprogs.sourceforge.net"
 license="GPL LGPL MIT"
 sources="https://prdownloads.sourceforge.net/$name/$name-$ver.tar.gz"
 depends="util-linux sh"
-needed="$name-$ver.tar.gz"
-ignore_files="etc/e2scrub.conf  etc/mke2fs.conf"
+files="$name-$ver.tar.gz"
+config="etc/e2scrub.conf  etc/mke2fs.conf"
 
-unpack-pkg() {
+unpack() {
 cd $workdir 
 tar -xf $hanhdir/$name-$ver.tar.gz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 ./configure --prefix=/usr           \
              --sysconfdir=/etc       \
@@ -27,7 +27,7 @@ cd $workdir/$name-$ver
 make
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 }

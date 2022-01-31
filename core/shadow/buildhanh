@@ -1,30 +1,54 @@
 # Reference: Arch Linux, Glaucus Linux, Linux From Scratch
 
 name=shadow
-ver=4.9
+ver=4.11.1
 desc="Password and account management tools"
 home="https://github.com/shadow-maint/shadow"
 license="BSD"
 depends="libcap acl"
-ignore_files="etc/login.defs"
+config="etc/login.defs"
 sources="https://github.com/shadow-maint/shadow/releases/download/v$ver/$name-$ver.tar.xz"
 needed="$name-$ver.tar.xz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 cd $name-$ver
 sed -e "224s/rounds/min_rounds/" -i libmisc/salt.c
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
-# --with-sysroot may need to specify for cross-compiling
-./configure --sysconfdir=/etc --with-group-name-max-length=32 --with-sysroot=/home/user/mussel/sysroot
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr \
+	--bindir=/usr/bin \
+	--sbindir=/usr/bin \
+	--libdir=/usr/lib \
+	--mandir=/usr/share/man \
+	--sysconfdir=/etc \
+	--without-selinux \
+	--without-su \
+	--with-group-name-max-length=32 
 make
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
+
+rm -rf $pkgdir/usr/sbin/logoutd 
+
+for a in login chsh chfn sg nologin; do 
+	rm -rf $pkgdir/usr/bin/$x 
+done
+
+for a in vipw vigr; do 
+	rm -rf $pkgdir/usr/sbin/$x
+done
+
+mv $pkgdir/usr/bin/newgrp $pkgdir/usr/bin/sg
+mv $pkgdir/usr/sbin/* $pkgdir/usr/bin
+rm -rf $pkgdir/usr/sbin
 }
