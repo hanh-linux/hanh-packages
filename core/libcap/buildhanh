@@ -23,8 +23,8 @@ if test -z "$HOSTCC"; then
 fi
 make \
 	CFLAGS="$CFLAGS -fPIC" \
-	CC=$CC BUILD_CC=$HOSTCC \
-	prefix=/usr lib=lib \
+	CC="$CC" BUILD_CC="$HOSTCC" \
+	prefix=/usr lib=lib sbindir=bin \
 	PAM_CAP=no GOLANG=no
 }
 
@@ -32,8 +32,8 @@ mkpkg() {
 cd $workdir/$name-$ver
 make \
 	CFLAGS="$CFLAGS -fPIC" \
-	CC=$CC BUILD_CC=$HOSTCC \
-	prefix=/usr lib=lib \
+	CC="$CC" BUILD_CC="$HOSTCC" \
+	prefix=/usr lib=lib sbindir=bin \
 	PAM_CAP=no GOLANG=no \
 	DESTDIR=$pkgdir install
 chmod 755 $pkgdir/usr/lib/libcap.so.$ver

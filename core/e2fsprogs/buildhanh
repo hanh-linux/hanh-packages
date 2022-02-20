@@ -19,6 +19,8 @@ compile() {
 cd $workdir/$name-$ver
 ./configure --prefix=/usr           \
              --sysconfdir=/etc       \
+	     --libdir=/usr/lib	     \
+	     --sbindir=/usr/bin	     \
              --enable-elf-shlibs     \
              --disable-libblkid      \
              --disable-libuuid       \

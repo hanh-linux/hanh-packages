@@ -1,0 +1,22 @@
+name=libexecinfo
+ver=20180201
+desc="Quick-n-dirty BSD licensed clone of backtrace facility found in the GNU libc"
+home="https://github.com/resslinux/libexecinfo"
+license="BSD"
+sources="https://github.com/resslinux/libexecinfo/archive/refs/tags/v$ver.tar.gz"
+files="v$ver.tar.gz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/v$ver.tar.gz
+}
+
+compile() {
+cd $workdir/$name-$ver
+make 
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

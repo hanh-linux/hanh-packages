@@ -1,24 +1,24 @@
 name=libaio
 ver="0.3.112"
 desc="The library provides the Linux-native API for async I/O"
-home=""
-license=""
+home="https://pagure.io/libaio"
+license="LGPL2"
 sources="https://ftp.debian.org/debian/pool/main/liba/libaio/libaio_$ver.orig.tar.xz"
 needed="libaio_$ver.orig.tar.xz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/libaio_$ver.orig.tar.xz
 cd $name-$ver
 sed -i '/install.*libaio.a/s/^/#/' src/Makefile
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 make
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 }

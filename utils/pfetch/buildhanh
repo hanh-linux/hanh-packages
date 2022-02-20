@@ -6,15 +6,15 @@ _gitver=0.6.0
 desc="A pretty system information tool written in POSIX sh."
 home="https://github.com/dylanaraps/$name"
 sources="$home/archive/refs/tags/$_gitver.tar.gz"
-contain="$name"
-needed="$_gitver.tar.gz"
+files="$_gitver.tar.gz"
+task="unpack mkpkg"
 
-unpack-pkg(){
+unpack(){
 cd $workdir
 tar -xf $hanhdir/$_gitver.tar.gz
 }
 
-make-pkg(){
+mkpkg(){
 cd $workdir/$name-$_gitver/
 install -Dm755 "$workdir/$name-$_gitver/pfetch" "$pkgdir/usr/bin/pfetch"
 install -Dm644 "$workdir/$name-$_gitver/LICENSE.md" "$pkgdir/usr/share/licenses/$name/LICENSE"

@@ -1,0 +1,12 @@
+--- Makefile	2022-02-09 08:47:51.000564220 +0700
++++ ../Makefile	2022-02-09 08:47:34.350805083 +0700
+@@ -171,6 +171,9 @@
+ gnu-efi:
+ 	git clone https://git.code.sf.net/p/gnu-efi/code --branch=3.0.14 --depth=1 $@
+ 	cp aux/elf/* gnu-efi/inc/
++	sed 's/-maccumulate-outgoing-args//g' < "gnu-efi/Make.defaults" > sed.tmp
++	mv sed.tmp "gnu-efi/Make.defaults"
++
+ 
+ ovmf-x64:
+ 	mkdir -p ovmf-x64

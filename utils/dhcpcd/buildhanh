@@ -4,17 +4,17 @@ ver=9.4.1
 desc="DHCP cilent daemon"
 home="https://roy.marples.name/projects/dhcpcd"
 license="BSD"
-depends="musl sh udev"
+depends="musl sh"
 contain="dhcp-cilent"
 sources="https://roy.marples.name/downloads/$name/$name-$ver.tar.xz"
-needed="$name-$ver.tar.xz $name.initd" # .initd file used from Alpine Linux
+needed="$name-$ver.tar.xz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 CFLAGS="$CFLAGS -D_GNU_SOURCE -DHAVE_PRINTF_M"
 ./configure --host=$CHOST \
@@ -24,13 +24,14 @@ CFLAGS="$CFLAGS -D_GNU_SOURCE -DHAVE_PRINTF_M"
       --libexecdir=/usr/lib/dhcpcd \
       --dbdir=/var/lib/dhcpcd \
       --runstatedir=/run \
-      --privsepuser=dhcpcd --enable-ipv6 --without-dev --without-udev
+      --privsepuser=dhcpcd \
+      --enable-ipv6 \
+      --without-dev \
+      --without-udev
 make
 }
 
-make-pkg(){
+mkpkg(){
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
-install -dm755 $pkgdir/etc/init.d 
-install -Dm755 $hanhdir/$name.initd $pkgdir/etc/init.d/dhcpcd
 }

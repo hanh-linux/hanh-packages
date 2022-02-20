@@ -1,0 +1,31 @@
+# We can't compile syslinux, but we can use isolinux binaries 
+
+name=isolinux
+_name=syslinux
+ver=6.04-pre1
+_shortver=6.04
+desc="Extract of syslinux's iso bootloader"
+home="https://wiki.syslinux.org/wiki/index.php?title=The_Syslinux_Project"
+license="GPL"
+sources="https://mirrors.edge.kernel.org/pub/linux/utils/boot/$_name/Testing/$_shortver/$_name-$ver.tar.xz"
+files="$_name-$ver.tar.xz"
+task="unpack mkpkg"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$_name-$ver.tar.xz
+}
+
+mkpkg() {
+cd $workdir/$_name-$ver
+install -dm755 $pkgdir/usr/share/$name
+install -dm755 $pkgdir/usr/bin
+
+for file in core/isolinux.bin \
+	com32/elflink/ldlinux/ldlinux.c32 \
+	memdisk/memdisk mbr/isohdpfx.bin; do
+	install -Dm644 bios/$file $pkgdir/usr/share/$name/$(basename $file) || die
+done
+
+echo "All 'isolinux' binaries are located in /usr/share/$name"
+}

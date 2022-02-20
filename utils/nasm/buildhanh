@@ -1,0 +1,26 @@
+name=nasm
+ver=2.15.05
+desc="x86 assembler designed for portability and modularity"
+home="https://www.nasm.us"
+license="BSD"
+depends="musl"
+sources="https://www.nasm.us/pub/nasm/releasebuilds/$name/$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure --prefix=/usr \
+	--host=$CHOST \
+	--build=$CBUILD 
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

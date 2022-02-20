@@ -1,0 +1,26 @@
+name=gzip
+ver=1.11
+desc="GNU archive tools"
+home="https://www.gnu.org/software/gzip/"
+license="GPL"
+sources="https://ftp.gnu.org/gnu/$name/$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--prefix=/usr \
+	--host=$CHOST \
+	--build=$CBUILD 
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

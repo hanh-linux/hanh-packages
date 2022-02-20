@@ -6,20 +6,20 @@ desc="A collection of libraries providing APIs to netlink protocol"
 license="LGPL2"
 home="https://github.com/thom311/libnl"
 sources="https://github.com/thom311/libnl/releases/download/$name$_gitver/$name-$ver.tar.gz"
-needed="$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.gz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
-./configure --prefix=/usr --sysconfdir=/etc/ --with-sysroot=/home/user/mussel/sysroot
+./configure --prefix=/usr --sysconfdir=/etc/ 
 make 
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 }

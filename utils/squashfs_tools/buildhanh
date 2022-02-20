@@ -5,19 +5,23 @@ home="https://github.com/plougher/$name"
 license="GPL2"
 depends="xz zstd"
 sources="https://github.com/plougher/$name/archive/refs/tags/$ver.tar.gz"
-needed="$ver.tar.gz"
+files="$ver.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$ver.tar.gz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
-make -C $name GZIP_SUPPORT=1 XZ_SUPPORT=1 LZMA_XZ_SUPPORT=1 ZSTD_SUPPORT=1 # since toybox contains gzip
+make -C $name \
+	GZIP_SUPPORT=1 \
+	XZ_SUPPORT=1 \
+	LZMA_XZ_SUPPORT=1 \
+	ZSTD_SUPPORT=1 
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make -C $name install INSTALL_DIR=$pkgdir/bin
 }

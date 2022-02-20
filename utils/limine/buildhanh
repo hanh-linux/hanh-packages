@@ -1,0 +1,54 @@
+# Experimental, not ready to for reproduction 
+
+name=limine
+ver=v2.55
+desc="BIOS/UEFI x86_64 bootloader"
+home="https://github.com/limine-bootloader/limine"
+license="BSD2" 
+mkdeps="gmake autoconf automake libtool nasm mtools"
+sources="https://github.com/limine-bootloader/limine/releases/download/$ver/limine-$ver.tar.xz"
+attach="0001-patch-for-llvm-binutils.patch 0002-workaround-clang-build.patch"
+files="$name-$ver.tar.xz $attach"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+# Patch and re-generate the configure file that support LLVM on 2.83
+# Issue: Using stage3 symbol before loading it, downgrade to v2.55
+cd $name-$ver
+# patch -Np0 -i $hanhdir/0001-patch-for-llvm-binutils.patch
+# patch -Np0 -i $hanhdir/0002-workaround-clang-build.patch
+autoreconf -fiv
+
+}
+
+compile() {
+cd $workdir/$name-$ver
+if test -z "$AS"; then
+	AS=llvm-as 
+fi
+
+export TOOLCHAIN=$CHOST
+export USING_CLANG=1
+# ./configure \
+#	--prefix=/usr \
+#	--host=$CHOST \
+#	--build=$CBUILD \
+#	--enable-llvm
+#CFLAGS="$CFLAGS -Wno-error=unused-command-line-argument"
+gmake limine-bios bin/limine-install \
+	CC="$CC" \
+	TOOLCHAIN_CC="$CC" \
+	TOOLCHAIN_LD="$LD" \
+	TOOLCHAIN_OBJDUMP="$OBJDUMP" \
+	TOOLCHAIN_OBJCOPY="$OBJCOPY" \
+	-j1
+	
+}
+
+mkpkg() {
+install -dm755 $pkgdir/usr/bin 
+for bin in $(find $workdir/$name-$ver/bin); do 
+	install -Dm755 $bin $pkgdir/usr/bin/$(basename $bin)
+done
+}

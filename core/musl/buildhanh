@@ -21,9 +21,12 @@ mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 cd $pkgdir
+install -dm755 usr/bin
 rm -rf lib
 cd usr/lib 
 for lib in ld-musl-$CARCH.so.1 libc.so.6 libcrypt.so.1 libdl.so.2 libm.so.6 libpthread.so.0 libresolv.so.2; do
-	ln -srf libc.so $lib
+	ln -sf libc.so $lib
 done
+cd ../bin
+ln -sf ../lib/ld-musl-$CARCH.so.1 ldd
 }

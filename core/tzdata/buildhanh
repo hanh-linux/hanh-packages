@@ -1,0 +1,39 @@
+name=tzdata
+ver=2021e
+desc="Sources for timezone and daylight saving time data"
+home="https://www.iana.org/time-zones"
+license="public domain"
+sources="https://www.iana.org/time-zones/repository/releases/tzcode$ver.tar.gz \
+	https://www.iana.org/time-zones/repository/releases/tzdata$ver.tar.gz"
+files="tzcode$ver.tar.gz tzdata$ver.tar.gz"
+_zones="africa antarctica asia australasia \
+	europe northamerica southamerica \
+	etcetera backward factory"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/tzcode$ver.tar.gz
+tar -xf $hanhdir/tzdata$ver.tar.gz
+sed -i "s:sbin:bin:g" Makefile
+}
+
+compile() {
+cd $workdir
+make CC=$CC 
+}
+
+mkpkg() {
+cd $workdir
+make DESTDIR=${pkgdir} install
+
+./zic -b fat -d "${pkgdir}"/usr/share/zoneinfo $_zones
+./zic -b fat -d "${pkgdir}"/usr/share/zoneinfo/posix $_zones
+./zic -b fat -d "${pkgdir}"/usr/share/zoneinfo/right -L leapseconds $_zones
+
+./zic -b fat -d "${pkgdir}"/usr/share/zoneinfo -p America/New_York
+
+for file in iso3166.tab leap-seconds.list zone1970.tab SECURITY; do
+	install -Dm644 $file $pkgdir/usr/share/zoneinfo/$file 
+done
+rm -rf ${pkgdir}/etc/localtime
+}

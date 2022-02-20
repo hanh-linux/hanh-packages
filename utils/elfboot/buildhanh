@@ -1,0 +1,45 @@
+name=elfboot
+ver=02112022
+desc="A highly modular BIOS bootloader for the x86 architecture"
+home="https://github.com/croemheld/elfboot"
+license="GPL3"
+mkdeps="git gmake"
+attach="iso-elfboot 0001-only-iso-tools.patch elfboot.config"
+files="$attach"
+
+unpack() {
+cd $workdir
+if ! test -d $workdir/$name; then
+git clone $home.git
+fi 
+cd $name
+patch -Np0 -i $hanhdir/0001-only-iso-tools.patch
+cp -r $hanhdir/elfboot.config elfboot.config
+}
+
+compile() {
+cd $workdir/$name
+mkdir -p build 
+gmake \
+	CC="$CC" \
+	OBJCOPY="$OBJCOPY" \
+	OBJDUMP="$OBJDUMP" \
+	LD="$LD" \
+	STRIP="$STRIP" \
+	elfboot iso-tools V=1
+}
+
+mkpkg() {
+filedir="$pkgdir/usr/share/$name"
+install -dm755 $filedir
+install -dm755 $pkgdir/usr/bin
+install -Dm755 $hanhdir/iso-elfboot $pkgdir/usr/bin/iso-elfboot
+cd $workdir/$name 
+for f in bootimg.bin elfboot.bin \
+	elfboot.bid elfboot.tmg \
+	elfboot.map; do 
+	cp -r $workdir/$name/$f $filedir/$f || exit 1 
+done
+
+cp -r $workdir/$name/build/modules $filedir/modules
+}

@@ -1,0 +1,11 @@
+--- Makefile	2022-02-12 09:12:54.037022720 +0700
++++ Makefile1	2022-02-12 09:11:54.833750043 +0700
+@@ -165,6 +165,8 @@
+ 	@echo "  XORRISO $(BOOTISO)"
+ 	$(Q)$(XR) $(BOOTISO_CDFLAGS) -o $(BOOTISO) build 2> /dev/null
+ 
++iso-tools: build $(ELFBOOT) $(ELFBOOT).map $(BOOTIMG)
++
+ #
+ # Clean build
+ #

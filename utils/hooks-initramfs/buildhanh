@@ -1,0 +1,12 @@
+name=hooks-initramfs
+ver=1.0
+desc="Hanh Linux ISO hooks"
+license="None"
+files="hooks-initramfs.tar.xz"
+task=mkpkg
+
+mkpkg() {
+install -dm755 $pkgdir/usr/share/gen-initramfs/hooks
+tar -C $pkgdir/usr/share/gen-initramfs/hooks \
+	-xf $hanhdir/$name.tar.xz 
+}

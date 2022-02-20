@@ -6,11 +6,17 @@ ver=24.2
 desc="A bootloader for Linux"
 home="https://alioth.debian.org/projects/lilo/"
 license='BSD'
-depends="udev device-mapper"
+depends="device-mapper"
+mkdeps="perl bin86 posix-core-command"
 sources="https://alioth-archive.debian.org/releases/lilo/Lilo/${ver}/${name}-${ver}.tar.gz "
-needed="$name-$ver.tar.gz 01_makefile-adds.patch 03_keytab-lilo.8-debian-based.patch 05_readme.disk-change.patch 06_notinteractive.patch 11_fix-gcc-10.patch lilo-24.1-remove__GLIBC__.patch lilo-24.1-remove-O_ACCMODE.patch"
+attach="01_makefile-adds.patch 03_keytab-lilo.8-debian-based.patch\
+       	05_readme.disk-change.patch 06_notinteractive.patch\
+       	11_fix-gcc-10.patch lilo-24.1-remove__GLIBC__.patch\
+       	lilo-24.1-remove-O_ACCMODE.patch \
+	0001-Ataraxia-fix-build-with-clang.patch"
+files="$name-$ver.tar.gz $attach" 
 
-unpack-pkg(){
+unpack(){
   cd $workdir
   tar -xf $hanhdir/$name-$ver.tar.gz 
   cd $workdir/$name-$ver
@@ -21,9 +27,10 @@ unpack-pkg(){
   patch -Np1 -i $hanhdir/11_fix-gcc-10.patch
   patch -Np1 -i $hanhdir/lilo-24.1-remove__GLIBC__.patch
   patch -Np1 -i $hanhdir/lilo-24.1-remove-O_ACCMODE.patch
+  patch -Np1 -i $hanhdir/0001-Ataraxia-fix-build-with-clang.patch
 }
 
-compile-pkg() {
+compile() {
   cd $workdir/$name-$ver
   export LC_ALL=C
 
@@ -31,12 +38,12 @@ compile-pkg() {
 		-e '/strip/d;s|^	make|	$(MAKE)|g' \
 		-e '/images install/d' \
 		-e '/images all/d'
-  make CC="$CC" all 
+  make CC="$CC" CFLAGS="$CFLAGS -g" all 
 }
 
-make-pkg() {
+mkpkg() {
   cd $workdir/$name-$ver
-  make DESTDIR=$pkgdir install
+  make DESTDIR=$pkgdir SBIN_DIR=/usr/bin USRSBIN_DIR=/usr/bin install
 
   # Remove Debian specific files
   rm -rf "${pkgdir}"/etc/initramfs

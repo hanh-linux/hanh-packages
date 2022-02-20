@@ -1,14 +1,16 @@
 name=iproute2
-ver=5.15.0
+ver=5.16.0
 desc="IP Routing Utilities"
 home="https://www.linuxfoundation.org/collaborate/workgroups/networking/iproute2"
-build_bin="flex bison bash"
-makedeps="musl libelf libmnl libcap" # For cross-compiling, libcap must be compiled with -fPIC iproute2 will complain about undefined reference
 license="GPL2"
+# libcap must be compiled with -fPIC iproute2 or 
+# it will complain about undefined reference
+# libax25 (contain ax25.h) is now required
+mkdeps="musl libelf libmnl libcap flex bison bash libax25"
 sources="https://kernel.org/pub/linux/utils/net/$name/$name-$ver.tar.xz"
-needed="$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 cd $name-$ver
@@ -19,15 +21,15 @@ rm -fv man/man8/arpd.8
 sed -i 's/.m_ipt.o//' tc/Makefile
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 ./configure 
-CFLAGS="-D_GNU_SOURCE -fPIC $CFLAGS" make V=1
+CFLAGS="-D_GNU_SOURCE -fPIC $CFLAGS" make SBINDIR=/usr/bin
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
-make DESTDIR="$pkgdir" install
+make DESTDIR="$pkgdir" SBINDIR=/usr/bin install
 
 # Use Arch Linux command to install missing libnetlink
 install -Dm0644 include/libnetlink.h $pkgdir/usr/include/libnetlink.h

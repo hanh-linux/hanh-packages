@@ -4,20 +4,20 @@ desc="Command line editor library provides generic line editing"
 home="https://thrysoee.dk/editline/"
 license="BSD"
 sources="https://thrysoee.dk/editline/$name-$ver.tar.gz"
-needed="$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.gz
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 ./configure --prefix=/usr --disable-examples
 make
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 }

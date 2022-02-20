@@ -4,13 +4,24 @@ desc="Hanh Linux tool for generating initramfs"
 license="None"
 depends="busybox-initramfs "
 contain="initcpio"
-files="gen-initramfs init.in"
-task="mkpkg"
+attach="gen-initramfs.conf $name.tar.xz"
+config="etc/gen-initramfs.conf"
+files="$attach"
+task="unpack mkpkg"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name.tar.xz
+sed "s/CONFDIR/\/etc/g" -i gen-initramfs
+}
 
 mkpkg() {
 cd $pkgdir
 install -dm755 usr/bin 
 install -dm755 usr/share/$name
-install -Dm755 $hanhdir/gen-initramfs usr/bin/gen-initramfs
-install -Dm755 $hanhdir/init.in usr/share/$name/init.in
+install -dm755 etc/
+
+install -Dm755 $workdir/gen-initramfs usr/bin/gen-initramfs
+install -Dm755 $workdir/init.in usr/share/$name/init.in
+install -Dm644 $hanhdir/gen-initramfs.conf etc/gen-initramfs.conf
 }

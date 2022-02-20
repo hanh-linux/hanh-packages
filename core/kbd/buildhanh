@@ -1,0 +1,36 @@
+# This file is modified from Arch Linux since I'm too lazy 
+# to write an own file
+
+name=kbd
+ver=2.4.0
+desc="Keytable files and keyboard utilities"
+home="http://www.kbd-project.org"
+license='GPL'
+depends="musl"
+sources="https://www.kernel.org/pub/linux/utils/${name}/${name}-${ver}.tar.gz"
+attach="error.h"
+files="$name-$ver.tar.gz $attach"
+
+unpack() {
+  cd $workdir
+  tar -xf $hanhdir/$name-$ver.tar.gz
+  cp -r $hanhdir/error.h $name-$ver
+}
+
+compile() {
+  cd $name-$ver
+  ./configure \
+	  --prefix=/usr \
+	  --host=$CHOST \
+	  --build=$CBUILD \
+	  --sysconfdir=/etc \
+	  --datadir=/usr/share/kbd \
+	  --mandir=/usr/share/man \
+	  --disable-vlock
+  make KEYCODES_PROGS=yes RESIZECONS_PROGS=yes
+}
+
+mkpkg() {
+  cd $name-$ver
+  make KEYCODES_PROGS=yes RESIZECONS_PROGS=yes DESTDIR="${pkgdir}" install
+}

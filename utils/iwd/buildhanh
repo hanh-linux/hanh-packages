@@ -3,14 +3,17 @@ ver=1.6
 desc="Lightweight internet wireless daemon"
 home="https://iwd.wiki.kernel.org/"
 license="LGPL"
-makedeps="linux-headers dbus libedit"
-build_bin="autoconf automake libtool"
+mkdeps="linux-headers dbus libedit autoconf automake libtool"
 sources="https://mirrors.edge.kernel.org/pub/linux/network/wireless/iwd-$ver.tar.gz"
-needed="$name-$ver.tar.gz 0001-libedit.patch"
-_args="--prefix=/usr --sysconfdir=/etc --disable-systemd-service"
+attach="0001-libedit.patch"
+files="$name-$ver.tar.gz 0001-libedit.patch"
+_args="--prefix=/usr \
+	--sysconfdir=/etc \
+	--disable-systemd-service"
+buildFlags="full"
 
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.gz
 cd $name-$ver
@@ -19,24 +22,23 @@ patch -Np0 < $hanhdir/0001-libedit.patch
 autoreconf -fiv
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 eval ./configure $_args
 LDFLAGS="$LDFLAGS -ledit" make
 }
 
-compile-pkg_full() {
+compile_full() {
 contain="ead"
 echo contain=\"ead\" >> $hanhdir/.buildinfo
-_args="$_args --enable-sim-hardcoded --enable-wired --enable-tools"
-compile-pkg
+_args="$_args \
+	--enable-sim-hardcoded \
+	--enable-wired \
+	--enable-tools"
+compile
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
-install -dm755 $pkgdir/etc/init.d/ 
-install -Dm755 $hanhdir/iwd.initd $pkgdir/etc/init.d/iwd
-install -dm755 $pkgdir/etc/conf.d/
-install -Dm755 $hanhdir/iwd.confd $pkgdir/etc/conf.d/iwd
 }

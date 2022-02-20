@@ -1,0 +1,28 @@
+name=libax25
+ver="0.0.12-rc5"
+desc="Ham Radio - library for AX.25, ROSE, 6PACK, KISS and NETROM protocols."
+home="http://www.linux-ax25.org" # Out-of-date SSL certificate 
+license="LGPL"
+depends="musl"
+attach="$name-$ver.tar.gz" # no downloading sources from 
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile(){
+cd $workdir/$name-$ver
+./configure --host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr \
+	--sysconfdir=/etc
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install 
+# Install missing header 
+install -Dm644 netax25/ax25.h $pkgdir/usr/include/netax25/ax25.h
+}

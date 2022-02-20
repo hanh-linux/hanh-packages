@@ -10,17 +10,17 @@ needed="LVM2.$ver.tgz lvm.initd lvm.confd                            \
         mallinfo.patch mlockall-default-config.patch                 "
 ignore_files="etc/lvm/lvm.conf etc/lvm/lvmlocal.conf"
 
-unpack-pkg() {
+unpack() {
 cd $workdir
 tar -xf $hanhdir/LVM2.$ver.tgz
 mv LVM2* $name-$ver
 cd $name-$ver
-for x in $hanhdir/*.patch; do
-patch -Np1 -i $x
+for sth in $hanhdir/*.patch; do
+patch -Np1 -i $sth
 done
 }
 
-compile-pkg() {
+compile() {
 cd $workdir/$name-$ver
 
 export ac_cv_func_malloc_0_nonnull=yes
@@ -46,14 +46,10 @@ bash ./configure \
 make SHELL=bash
 }
 
-make-pkg() {
+mkpkg() {
 cd $workdir/$name-$ver
 make -j1 SHELL=bash DESTDIR=$pkgdir install_lvm2
 install -dm755 $pkgdir/etc/lvm/archive
 install -dm755 $pkgdir/etc/lvm/backup
 rm -rf $pkgdir/usr/lib/systemd
-install -dm755 $pkgdir/etc/init.d
-install -Dm755 $hanhdir/lvm2.initd $pkgdir/etc/init.d/lvm2
-install -dm755 $hanhdir/etc/conf.d
-install -Dm755 $hanhdir/lvm2.confd $pkgdir/etc/conf.d/lvm2
 }

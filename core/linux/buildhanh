@@ -1,39 +1,48 @@
 # Using Alpine Linux kernel configuration
+# LLVM is used by default
 
 name=linux
 ver=5.15.16
 desc="Linux kernel"
 home="https://kernel.org"
 license="GPL"
-sources="https://cdn.kernel.org/pub/linux/kernel/v5.x/$name-$ver.tar.xz \
-https://git.alpinelinux.org/aports/plain/main/linux-lts/config-lts.x86_64"
+sources="https://cdn.kernel.org/pub/linux/kernel/v5.x/$name-$ver.tar.xz"
 depends="kmod initcpio"
 mkdeps="argp-standalone musl-obstack fts alpine-headers \
-	lsb-tools bc linux-headers openssl awk bash \
+	bc linux-headers openssl awk bash \
 	gmake bison perl" 
-attach="0001-pick-up-system-variables.patch"
+attach="config-lts.x86_64"
 files="$name-$ver.tar.xz config-lts.x86_64 $attach"
 
 misc="$(echo $misc | sed 's/ //g')"
 case $misc in 
 	cross ) cross="CROSS_COMPILE=$CHOST-"
 esac
+_make="gmake \
+	CC=$CC \
+	LD=$LD \
+	AR=$AR \
+	NM=$NM \
+	OBJCOPY=$OBJCOPY \
+	OBJDUMP=$OBJDUMP \
+	READELF=$READELF \
+	STRIP=$STRIP \
+	LLVM=$LLVM
+"
 
 unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 cd $name-$ver
-patch -Np0 -i $hanhdir/0001-pick-up-system-variables.patch
-make mrproper
+$_make mrproper
 cp -r $hanhdir/config-lts.x86_64 .config
-make olddefconfig
-make prepare 
+$_make olddefconfig
 }
 
 compile() {
 cd $workdir/$name-$ver 
-make \
-	ARCH=$CARCH LLVM=yes $CROSS 
+$_make \
+	ARCH=$CARCH $CROSS 
 }
 
 mkpkg() {
@@ -41,8 +50,8 @@ cd $pkgdir
 install -dm755 $pkgdir/boot/
 
 cd $workdir/$name-$ver
-make \
-	ARCH=$CARCH LLVM=yes $CROSS \
+$_make \
+	ARCH=$CARCH $CROSS \
 	INSTALL_MOD_PATH="$pkgdir/usr" \
 	INSTALL_MOD_STRIP=1 \
 	modules_install

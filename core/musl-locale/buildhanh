@@ -1,0 +1,56 @@
+# Source: Alpine Linux
+
+name=musl-locales
+ver=02052022
+desc="Locales support for musl libc"
+home="https://gitlab.com/rilian-la-te/musl-locales"
+license=LGPL3
+mkdeps="cmake gettext-tiny git"
+attach="add-all-available-locales.patch"
+files="$attach"
+
+if test "$CBUILD" != "$CHOST"; then
+	CMAKE_CROSS="-DCMAKE_SYSTEM_NAME=Linux \
+		-DCMAKE_HOST_SYSTEM_NAME=Linux"
+fi
+
+misc="$(echo $misc | sed 's/ //g')"
+
+case $misc in 
+	make )
+		cmd="make";
+		buildtype="Unix Makefiles";;
+	ninja ) 
+		cmd="ninja"; 
+		buildtype="Ninja";;
+	data ) 
+		echo "Data build! Exiting...";;
+	*) 
+		echo "Invalid build type (ninja/make)";;
+esac
+
+unpack() {
+if test -z $nodeps; then 
+	check_deps $cmd 
+fi
+
+cd $workdir
+git clone https://github.com/rilian-la-te/musl-locales.git
+cd $name 
+patch -Np1 -i $hanhdir/add-all-available-locales.patch
+}
+
+compile() {
+cd $workdir/$name
+cmake -S . -B build \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	"$CMAKE_CROSS" \
+	-Wno-dev -G "$buildtype" || exit 1
+eval $cmd -C build || exit 1
+}
+
+mkpkg() {
+cd $name 
+eval DESTDIR=$pkgdir $cmd -C build || exit 1 
+}
