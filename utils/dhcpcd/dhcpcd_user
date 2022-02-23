@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if test $(id -u) != 0; then 
+       echo "Not root"
+fi       
+
+groupadd -g 52 dhcpcd        &&
+useradd  -c 'dhcpcd PrivSep' \
+         -d /var/lib/dhcpcd  \
+         -g dhcpcd           \
+         -s /bin/false     \
+         -u 52 dhcpcd &&
+chown    -v dhcpcd:dhcpcd /var/lib/dhcpcd 

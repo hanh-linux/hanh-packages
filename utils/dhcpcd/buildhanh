@@ -34,4 +34,20 @@ make
 mkpkg(){
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
+install -dvm755 $pkgdir/var/lib/dhcpcd
+
+cat << EOF
+Only run this command if you haven't created a dhcpcd user. 
+Please run the commands below as root: 
+
+groupadd -g 52 dhcpcd        &&
+useradd  -c 'dhcpcd PrivSep' \
+         -d /var/lib/dhcpcd  \
+         -g dhcpcd           \
+         -s /bin/false     \
+         -u 52 dhcpcd &&
+chown    -v dhcpcd:dhcpcd /var/lib/dhcpcd
+
+or run the ./dhcpcd_user inside this directory  
+EOF
 }
