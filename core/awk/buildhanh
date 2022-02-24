@@ -1,0 +1,6 @@
+name=awk 
+define_ask
+
+pkgask() {
+ask_pkg mawk 
+}

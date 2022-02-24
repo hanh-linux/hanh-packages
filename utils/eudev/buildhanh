@@ -1,0 +1,34 @@
+name=eudev
+ver=3.2.11
+desc="Fork of systemd udev"
+home="https://github.com/eudev-project/eudev/"
+license="BSD"
+contain="libudev udev"
+depends="musl"
+mkdeps="autoconf automake libtool util-linux linux-headers"
+sources="https://github.com/eudev-project/eudev/releases/download/v$ver/$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr \ 
+	--libdir=/usr/lib \
+	--bindir=/usr/bin \
+	--with-rootprefix=/ \
+	--exec-prefix=/ \
+	--disable-hwdb
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

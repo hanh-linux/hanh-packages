@@ -1,0 +1,6 @@
+name=mkfs.fat
+define_ask
+
+pkgask() {
+ask_pkg busybox
+}

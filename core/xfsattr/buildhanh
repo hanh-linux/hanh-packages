@@ -1,0 +1,6 @@
+name=xfsattr
+define_ask
+
+pkgask() {
+ask_pkg attr
+}

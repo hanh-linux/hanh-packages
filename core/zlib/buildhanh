@@ -1,0 +1,6 @@
+name=zlib
+define_ask 
+
+pkgask() {
+ask_pkg zlib-ng
+}

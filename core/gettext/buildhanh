@@ -1,0 +1,6 @@
+name=gettext
+define_ask
+
+pkgask() {
+ask_pkg gettext-tiny
+}

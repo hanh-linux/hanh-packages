@@ -1,0 +1,6 @@
+name=udev
+define_ask 
+
+pkgask() {
+ask_pkg eudev
+}

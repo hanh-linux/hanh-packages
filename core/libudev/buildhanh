@@ -1,0 +1,6 @@
+name=libudev
+define_ask 
+
+pkgask() {
+ask_pkg libudev-zero eudev
+}

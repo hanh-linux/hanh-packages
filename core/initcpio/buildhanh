@@ -1,0 +1,6 @@
+name=initcpio
+define_ask 
+
+pkgask() {
+ask_pkg gen-initramfs
+}

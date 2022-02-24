@@ -1,0 +1,6 @@
+name=libcurses
+define_ask
+
+pkgask() {
+ask_pkg netbsd-curses
+}

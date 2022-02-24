@@ -1,0 +1,6 @@
+name=xfsacl
+define_ask
+
+pkgask() {
+ask_pkg acl
+}

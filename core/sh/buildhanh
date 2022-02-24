@@ -1,0 +1,6 @@
+name=sh
+define_ask
+
+pkgask() {
+ask_pkg mksh
+}

@@ -1,0 +1,6 @@
+name=dhcp-cilent
+define_ask
+
+pkgask() {
+ask_pkg dhcpcd
+}

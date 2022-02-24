@@ -1,0 +1,6 @@
+name=pkg-config
+define_ask 
+
+pkgask() {
+ask_pkg pkgconf
+}

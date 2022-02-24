@@ -1,0 +1,6 @@
+name=mdev
+define_ask 
+
+pkgask() {
+ask_pkg mdev
+}
