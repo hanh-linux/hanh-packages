@@ -3,9 +3,9 @@ ver=2.03.14
 desc="Logical Volume Manager 2 utilities"
 home="https://sourceware.org/lvm2/"
 license="GPL2 LGPL2.1"
-depends="libaio device-mapper bash"
+depends="libaio device-mapper bash udev gmake" 
 sources="https://mirrors.kernel.org/sourceware/lvm2/LVM2.$ver.tgz"
-needed="LVM2.$ver.tgz lvm.initd lvm.confd                            \
+files="LVM2.$ver.tgz lvm.initd lvm.confd                            \
         fix-stdio-usage.patch library_dir-default-config.patch       \
         mallinfo.patch mlockall-default-config.patch                 "
 ignore_files="etc/lvm/lvm.conf etc/lvm/lvmlocal.conf"
@@ -43,13 +43,15 @@ bash ./configure \
 		--enable-udev_rules --disable-readline \
 		CLDFLAGS="$LDFLAGS"
 # Build and install script are taken from Ataraxia Linux
-make SHELL=bash
+gmake SHELL=bash
 }
 
 mkpkg() {
 cd $workdir/$name-$ver
-make -j1 SHELL=bash DESTDIR=$pkgdir install_lvm2
+gmake -j1 SHELL=bash DESTDIR=$pkgdir install_lvm2
 install -dm755 $pkgdir/etc/lvm/archive
 install -dm755 $pkgdir/etc/lvm/backup
 rm -rf $pkgdir/usr/lib/systemd
+
+echo "For using LVM2, please make a hook for udev to trigger it"
 }

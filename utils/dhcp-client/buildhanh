@@ -1,4 +1,4 @@
-name=dhcp-cilent
+name=dhcp-client
 define_ask
 
 pkgask() {

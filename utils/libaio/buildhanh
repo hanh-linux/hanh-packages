@@ -4,7 +4,8 @@ desc="The library provides the Linux-native API for async I/O"
 home="https://pagure.io/libaio"
 license="LGPL2"
 sources="https://ftp.debian.org/debian/pool/main/liba/libaio/libaio_$ver.orig.tar.xz"
-needed="libaio_$ver.orig.tar.xz"
+mkdeps="gmake"
+files="libaio_$ver.orig.tar.xz"
 
 unpack() {
 cd $workdir
@@ -15,10 +16,10 @@ sed -i '/install.*libaio.a/s/^/#/' src/Makefile
 
 compile() {
 cd $workdir/$name-$ver
-make
+gmake
 }
 
 mkpkg() {
 cd $workdir/$name-$ver
-make DESTDIR=$pkgdir install
+gmake DESTDIR=$pkgdir install
 }

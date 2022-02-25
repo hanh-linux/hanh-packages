@@ -6,6 +6,7 @@ desc="Lightweight replacements for GNU Gettext"
 home="https://github.com/sabotage-linux/gettext-tiny"
 license="BSD"
 depends="musl"
+mkdeps="gmake"
 contain="gettext"
 sources="http://ftp.barfooze.de/pub/sabotage/tarballs/$name-$ver.tar.xz"
 files="$name-$ver.tar.xz"
@@ -17,10 +18,10 @@ tar -xf $hanhdir/$name-$ver.tar.xz
 
 compile() {
 cd $workdir/$name-$ver
-make LIBINTL=MUSL
+gmake LIBINTL=MUSL
 }
 
 mkpkg() {
 cd $workdir/$name-$ver
-make LIBINTL=MUSL DESTDIR=$pkgdir prefix=/usr install
+gmake LIBINTL=MUSL DESTDIR=$pkgdir prefix=/usr install
 }

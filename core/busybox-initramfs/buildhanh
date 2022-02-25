@@ -32,14 +32,15 @@ if test -z "$HOSTLD"; then
 	HOSTLD="$LD"
 fi
 
-make ARCH=x86_64 $CROSS defconfig
-make ARCH=x86_64 $CROSS 
+gmake ARCH=x86_64 $CROSS defconfig
+gmake ARCH=x86_64 $CROSS 
 }
 
 mkpkg() {
 cd $workdir/$_name-$ver
-make ARCH=x86_64 $CROSS \
+gmake ARCH=x86_64 $CROSS \
 	CONFIG_PREFIX=$pkgdir/usr/share/gen-initramfs/$name install
+
 rm -rf $pkgdir/usr/share/gen-initramfs/$name/linuxrc
 cd $pkgdir/usr/share/gen-initramfs/$name
 for bindir in bin sbin usr/sbin; do

@@ -18,7 +18,7 @@ misc="$(echo $misc | sed 's/ //g')"
 
 case $misc in 
 	make )
-		cmd="make";
+		cmd="gmake";
 		buildtype="Unix Makefiles";;
 	ninja ) 
 		cmd="ninja"; 

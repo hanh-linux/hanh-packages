@@ -4,34 +4,25 @@ desc="Multi-call small binary"
 home="https://github.com/landley/toybox"
 sources="https://codeload.github.com/landley/toybox/tar.gz/refs/tags/$ver"
 license="0BSD"
+mkdeps="gmake"
 attach="config"
 contain="findutils diffutils"
 needed="$ver $attach"
-buildFlags="full"
 
 unpack(){
 cd $workdir
 tar -xf $hanhdir/$ver
 }
 
-compile_pachanh () {
+compile () {
 cp -r $hanhdir/config $workdir/$name-$ver/.config
-compile
-}
-
-compile(){
-cd $workdir/$name-$ver
-if test -f $(pwd)/.config; then
-	make oldconfig
-else
-	make defconfig
-fi
-make
+gmake oldconfig 
+gmake 
 }
 
 mkpkg() {
 cd $workdir/$name-$ver
-make PREFIX=$pkgdir install
+gmake PREFIX=$pkgdir install
 cd $pkgdir 
 for bindir in bin sbin usr/sbin; do 
 	mv $bindir/* usr/bin

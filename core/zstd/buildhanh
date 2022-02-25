@@ -6,6 +6,7 @@ desc="Zstandard - a fast decompression archive type"
 home="https://github.com/facebook/$name"
 license="GPL2 BSD"
 depends="musl xz zlib"
+mkdeps="gmake"
 sources="https://github.com/facebook/$name/releases/download/v$ver/$name-$ver.tar.gz"
 files="$name-$ver.tar.gz"
 
@@ -17,10 +18,10 @@ tar -xf $hanhdir/$name-$ver.tar.gz
 compile() {
 cd $workdir/$name-$ver
 export CFLAGS=$(echo $CFLAGS | sed "s/-fno-exceptions/ /g")
-make 
+gmake 
 }
 
 mkpkg() {
 cd $workdir/$name-$ver
-make DESTDIR=$pkgdir prefix=/usr install
+gmake DESTDIR=$pkgdir prefix=/usr install
 }

@@ -1,0 +1,6 @@
+name=findutils
+define_ask
+
+pkgask() {
+ask_pkg findutils
+}

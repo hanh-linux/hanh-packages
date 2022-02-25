@@ -7,7 +7,7 @@ home="https://github.com/sabotage-linux/netbsd-curses"
 contain="libcurses libterminfo"
 license="BSD"
 depends="sh"
-mkdeps="git"
+mkdeps="gmake git"
 
 unpack() {
         cd "$workdir"
@@ -17,10 +17,10 @@ unpack() {
 
 compile() {
 	cd $workdir/$name
-	make PREFIX="/usr"
+	gmake PREFIX="/usr"
 }
 
 mkpkg() {
 	cd "$workdir/$name"
-	make DESTDIR=$pkgdir PREFIX=/usr install
+	gmake DESTDIR=$pkgdir PREFIX=/usr install
 	}

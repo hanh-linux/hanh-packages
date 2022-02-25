@@ -5,7 +5,7 @@ desc="DHCP cilent daemon"
 home="https://roy.marples.name/projects/dhcpcd"
 license="BSD"
 depends="musl sh"
-contain="dhcp-cilent"
+contain="dhcp-client"
 sources="https://roy.marples.name/downloads/$name/$name-$ver.tar.xz"
 needed="$name-$ver.tar.xz"
 

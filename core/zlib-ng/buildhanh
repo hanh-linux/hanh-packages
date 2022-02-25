@@ -6,6 +6,7 @@ desc="zlib replacement with optimizations"
 home="https://github.com/zlib-ng/zlib-ng"
 license="Zlib"
 contain="zlib"
+mkdeps="gmake"
 sources="https://github.com/zlib-ng/$name/archive/refs/tags/$ver.tar.gz"
 files="$ver.tar.gz"
 
@@ -18,10 +19,10 @@ compile() {
 cd $workdir/$name-$ver
 ./configure --prefix=/usr \
        --zlib-compat
-make 
+gmake 
 }
 
 mkpkg() {
 cd $workdir/$name-$ver
-make DESTDIR=$pkgdir install
+gmake DESTDIR=$pkgdir install
 }

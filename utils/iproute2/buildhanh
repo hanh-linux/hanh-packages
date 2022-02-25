@@ -6,7 +6,7 @@ license="GPL2"
 # libcap must be compiled with -fPIC iproute2 or 
 # it will complain about undefined reference
 # libax25 (contain ax25.h) is now required
-mkdeps="musl libelf libmnl libcap flex bison bash libax25"
+mkdeps="gmake musl libelf libmnl libcap flex bison bash libax25"
 sources="https://kernel.org/pub/linux/utils/net/$name/$name-$ver.tar.xz"
 files="$name-$ver.tar.xz"
 
@@ -24,12 +24,12 @@ sed -i 's/.m_ipt.o//' tc/Makefile
 compile() {
 cd $workdir/$name-$ver
 ./configure 
-CFLAGS="-D_GNU_SOURCE -fPIC $CFLAGS" make SBINDIR=/usr/bin
+CFLAGS="-D_GNU_SOURCE -fPIC $CFLAGS" gmake SBINDIR=/usr/bin
 }
 
 mkpkg() {
 cd $workdir/$name-$ver
-make DESTDIR="$pkgdir" SBINDIR=/usr/bin install
+gmake DESTDIR="$pkgdir" SBINDIR=/usr/bin install
 
 # Use Arch Linux command to install missing libnetlink
 install -Dm0644 include/libnetlink.h $pkgdir/usr/include/libnetlink.h

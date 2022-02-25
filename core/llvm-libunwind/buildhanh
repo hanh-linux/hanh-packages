@@ -4,7 +4,7 @@ desc="C programming interface (API) to determine the call-chain of a program"
 home="https://llvm.org"
 license="Apache 2.0 with LLVM exception"
 contain="libunwind"
-depends="cmake"
+mkdeps="cmake"
 # LLVM is a little complicated since it requires
 # a monopoly layout to build projects -_-
 sources="https://github.com/llvm/llvm-project/releases/download/llvmorg-$ver/llvm-project-$ver.src.tar.xz" 
@@ -16,7 +16,7 @@ case $misc in
 		cmd="ninja";
 		filetype="Ninja";;
 	"make"	)
-		cmd="make";
+		cmd="gmake";
 		filetype="Unix Makefiles";;
 	"data"  ) 
 		echo "Data build, ignoring";;
@@ -43,7 +43,7 @@ cmake -S . -B build \
 	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DLIBUNWIND_USE_COMPILER_RT=ON \
 	-Wno-dev -G "$filetype"
-eval $cmd -C build || ninja
+eval $cmd -C build || exit 1
 }
 
 mkpkg() {

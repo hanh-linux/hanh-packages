@@ -6,6 +6,7 @@ desc="POSIX capabilities"
 home="https://sites.google.com/site/fullycapable/"
 license="GPL2"
 depends="musl"
+mkdeps="gmake"
 sources="https://cdn.kernel.org/pub/linux/libs/security/linux-privs/${name}2/$name-$ver.tar.xz"
 needed=$name-$ver.tar.xz
 
@@ -21,7 +22,8 @@ cd $workdir/$name-$ver
 if test -z "$HOSTCC"; then
 	HOSTCC=$CC 
 fi
-make \
+
+gmake \
 	CFLAGS="$CFLAGS -fPIC" \
 	CC="$CC" BUILD_CC="$HOSTCC" \
 	prefix=/usr lib=lib sbindir=bin \
@@ -30,7 +32,7 @@ make \
 
 mkpkg() {
 cd $workdir/$name-$ver
-make \
+gmake \
 	CFLAGS="$CFLAGS -fPIC" \
 	CC="$CC" BUILD_CC="$HOSTCC" \
 	prefix=/usr lib=lib sbindir=bin \

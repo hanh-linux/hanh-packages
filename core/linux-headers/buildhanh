@@ -4,6 +4,7 @@ ver=5.15.16
 desc="Linux kernel headers"
 home="https://kernel.org"
 license="GPL"
+mkdeps="gmake"
 sources="https://cdn.kernel.org/pub/linux/kernel/v5.x/$_name-$ver.tar.xz"
 files="$_name-$ver.tar.xz"
 
@@ -14,13 +15,13 @@ tar -xf $hanhdir/$_name-$ver.tar.xz
 
 compile() {
 cd $workdir/$_name-$ver
-make CC=$CC mrproper
-make CC=$CC ARCH=x86_64 headers
+gmake CC=$CC mrproper
+gmake CC=$CC ARCH=x86_64 headers
 }
 
 mkpkg() {
 cd $workdir/$_name-$ver
-make \
+gmake \
 	ARCH=x86_64 \
 	INSTALL_HDR_PATH=$pkgdir/usr \
 	headers_install

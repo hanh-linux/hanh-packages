@@ -1,10 +1,10 @@
 name=expat
-ver=2.4.1
+ver=2.4.5
 desc="XML Parser library written in C"
 home="http://www.libexpat.org/"
 license="MIT"
 sources="https://downloads.sourceforge.net/project/expat/expat/$ver/expat-$ver.tar.bz2"
-needed="expat-$ver.tar.bz2"
+files="expat-$ver.tar.bz2"
 
 unpack() {
 cd $workdir

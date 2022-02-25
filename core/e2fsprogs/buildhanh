@@ -7,6 +7,7 @@ home="https://e2fsprogs.sourceforge.net"
 license="GPL LGPL MIT"
 sources="https://prdownloads.sourceforge.net/$name/$name-$ver.tar.gz"
 depends="util-linux sh"
+mkdeps="gmake"
 files="$name-$ver.tar.gz"
 config="etc/e2scrub.conf  etc/mke2fs.conf"
 
@@ -26,7 +27,7 @@ cd $workdir/$name-$ver
              --disable-libuuid       \
              --disable-uuidd         \
              --disable-fsck
-make
+gmake
 }
 
 mkpkg() {
