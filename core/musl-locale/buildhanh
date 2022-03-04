@@ -8,6 +8,7 @@ license=LGPL3
 mkdeps="cmake gettext-tiny git"
 attach="add-all-available-locales.patch"
 files="$attach"
+buildFlags="ninja/make/data"
 
 if test "$CBUILD" != "$CHOST"; then
 	CMAKE_CROSS="-DCMAKE_SYSTEM_NAME=Linux \
@@ -15,7 +16,7 @@ if test "$CBUILD" != "$CHOST"; then
 fi
 
 misc="$(echo $misc | sed 's/ //g')"
-
+for arg in $misc; do
 case $misc in 
 	make )
 		cmd="gmake";
@@ -28,6 +29,7 @@ case $misc in
 	*) 
 		echo "Invalid build type (ninja/make)";;
 esac
+done
 
 unpack() {
 if test -z $nodeps; then 

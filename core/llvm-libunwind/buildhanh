@@ -8,9 +8,11 @@ mkdeps="cmake"
 # LLVM is a little complicated since it requires
 # a monopoly layout to build projects -_-
 sources="https://github.com/llvm/llvm-project/releases/download/llvmorg-$ver/llvm-project-$ver.src.tar.xz" 
+buildFlags="ninja/make/data"
 files="llvm-project-$ver.src.tar.xz"
 
-misc="$(echo $misc | sed 's/ //g')"
+for x in $misc; do
+
 case $misc in 
 	"ninja"	)	
 		cmd="ninja";
@@ -24,6 +26,7 @@ case $misc in
 		die "Mode $misc is not supported by this build file";;
 esac
 
+done
 
 
 unpack() {

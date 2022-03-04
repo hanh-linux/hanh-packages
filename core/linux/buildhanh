@@ -13,11 +13,14 @@ mkdeps="argp-standalone musl-obstack fts alpine-headers \
 	gmake yacc perl base-tools" 
 attach="config-lts.x86_64"
 files="$name-$ver.tar.xz config-lts.x86_64 $attach"
+buildFlags="cross"
 
-misc="$(echo $misc | sed 's/ //g')"
-case $misc in 
+for arg in $misc; do
+case $arg in 
 	cross ) cross="CROSS_COMPILE=$CHOST-"
 esac
+done
+
 _make="gmake \
 	CC=$CC \
 	LD=$LD \

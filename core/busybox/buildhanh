@@ -8,6 +8,7 @@ mkdeps="gmake"
 attach="0001-no-overwriting-build-command.patch "
 sources="https://busybox.net/downloads/$name-$ver.tar.bz2"
 files="$name-$ver.tar.bz2 $attach"
+buildFlags="cross base-tools"
 
 for arg in $misc; do 
 	case $misc in 
@@ -18,6 +19,7 @@ for arg in $misc; do
 			;;
 		"base-tools") 
 			contain="$contain base-tools";
+			echo contain=\"$contain\" >> $hanhdir/.buildinfo
 			toybox_conflict="yes";;
 	esac
 done

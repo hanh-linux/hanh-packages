@@ -1,7 +1,25 @@
 name=pachanh
-ver=v2.0
+_name=$name-new
+ver=2.0.1
 desc="Hanh Linux package manager"
 home="https://github.com/hanh-linux/pachanh-new"
 license="BSD"
 depends="sh base-tools"
+sources="https://github.com/hanh-linux/pachanh-new/archive/refs/tags/v$ver.tar.gz"
+files="v$ver.tar.gz"
 
+unpack() {
+cd $workdir
+tar -xf $hanhdir/v$ver.tar.gz
+}
+
+compile(){
+cd $workdir/$_name-$ver
+./install-script action=CLEAN
+./install-script PREFIX=/usr SYSROOT=/ action=COMPILE || true
+}
+
+mkpkg() {
+cd $workdir/$_name-$ver
+./install-script PREFIX=/usr SYSROOT=/ DESTDIR=$pkgdir action=INSTALL || true
+}
