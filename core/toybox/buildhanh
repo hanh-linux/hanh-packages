@@ -6,7 +6,7 @@ sources="https://codeload.github.com/landley/toybox/tar.gz/refs/tags/$ver"
 license="0BSD"
 mkdeps="gmake"
 attach="config"
-contain="findutils diffutils"
+contain="findutils diffutils base-tools"
 needed="$ver $attach"
 
 unpack(){
