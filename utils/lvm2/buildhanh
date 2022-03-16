@@ -5,10 +5,10 @@ home="https://sourceware.org/lvm2/"
 license="GPL2 LGPL2.1"
 depends="libaio device-mapper bash"
 sources="https://mirrors.kernel.org/sourceware/lvm2/LVM2.$ver.tgz"
-needed="LVM2.$ver.tgz lvm.initd lvm.confd                            \
-        fix-stdio-usage.patch library_dir-default-config.patch       \
+attach="fix-stdio-usage.patch library_dir-default-config.patch       \
         mallinfo.patch mlockall-default-config.patch                 "
-ignore_files="etc/lvm/lvm.conf etc/lvm/lvmlocal.conf"
+files="$attach LVM2.$ver.tgz"
+config="etc/lvm/lvm.conf etc/lvm/lvmlocal.conf"
 
 unpack() {
 cd $workdir
