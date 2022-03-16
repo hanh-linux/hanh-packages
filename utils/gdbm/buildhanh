@@ -1,0 +1,30 @@
+name=gdbm 
+ver=1.23
+desc="GNU database manager"
+home="https://gnu.org/software/gdbm"
+license="GPL"
+sources="https://ftp.gnu.org/gnu/$name/$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr \
+	--enable-libgdbm-compat \
+	--disable-largefile \
+	--disable-dependency-tracking \
+	--enable-fast-install
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

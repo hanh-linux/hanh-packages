@@ -1,0 +1,20 @@
+--- boot-strap	2022-03-08 15:48:03.730676342 +0700
++++ boot-strap1	2022-03-08 15:48:41.141387407 +0700
+@@ -413,9 +413,6 @@
+ 	[ -s make-bootstrap.sh ] || op_configure
+ 	chmod 755 make-bootstrap.sh || exit 1
+ 	./make-bootstrap.sh || exit 1
+-	case "$op" in
+-	build) op_test;;
+-	esac
+ }
+ 
+ op_test() {
+@@ -434,7 +431,6 @@
+ }
+ 
+ op_install() {
+-	op_test
+ 	case "$INSTALL_PREFIX,$INSTALL_BIN,$prefix" in
+ 	,$HOST_TARGET/bin,*/$HOST_TARGET)
+ 		INSTALL_PREFIX=`dirname $prefix`

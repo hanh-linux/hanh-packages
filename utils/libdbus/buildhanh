@@ -1,0 +1,6 @@
+name=libdbus
+define_ask 
+
+pkgask() {
+ask_pkg dbus
+}

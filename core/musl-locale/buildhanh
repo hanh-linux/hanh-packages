@@ -15,9 +15,9 @@ if test "$CBUILD" != "$CHOST"; then
 		-DCMAKE_HOST_SYSTEM_NAME=Linux"
 fi
 
-misc="$(echo $misc | sed 's/ //g')"
+
 for arg in $misc; do
-case $misc in 
+case $arg in 
 	make )
 		cmd="gmake";
 		buildtype="Unix Makefiles";;
@@ -25,11 +25,12 @@ case $misc in
 		cmd="ninja"; 
 		buildtype="Ninja";;
 	data ) 
+		cmd=data
 		echo "Data build! Exiting...";;
-	*) 
-		echo "Invalid build type (ninja/make)";;
 esac
 done
+
+test -z $cmd && die "Please specify build type"
 
 unpack() {
 if test -z $nodeps; then 

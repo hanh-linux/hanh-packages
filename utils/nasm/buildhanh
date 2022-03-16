@@ -4,8 +4,7 @@ desc="x86 assembler designed for portability and modularity"
 home="https://www.nasm.us"
 license="BSD"
 depends="musl"
-mkdeps="perl gmake"
-sources="https://www.nasm.us/pub/nasm/releasebuilds/$ver/nasm-$ver.tar.xz"
+sources="https://www.nasm.us/pub/nasm/releasebuilds/$name/$name-$ver.tar.xz"
 files="$name-$ver.tar.xz"
 
 unpack() {
@@ -18,10 +17,10 @@ cd $workdir/$name-$ver
 ./configure --prefix=/usr \
 	--host=$CHOST \
 	--build=$CBUILD 
-gmake
+make
 }
 
 mkpkg() {
 cd $workdir/$name-$ver
-gmake DESTDIR=$pkgdir install
+make DESTDIR=$pkgdir install
 }

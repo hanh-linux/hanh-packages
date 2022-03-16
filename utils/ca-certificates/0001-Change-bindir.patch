@@ -1,0 +1,19 @@
+--- Makefile	2022-03-09 10:55:18.221094751 +0700
++++ Makefile1	2022-03-09 10:55:12.541086202 +0700
+@@ -18,7 +18,6 @@
+ install: all
+ 	install -d -m755 ${DESTDIR}/etc/ca-certificates/update.d \
+ 		${DESTDIR}/usr/bin \
+-		${DESTDIR}/usr/sbin \
+ 		${DESTDIR}/usr/share/ca-certificates \
+ 		${DESTDIR}/usr/local/share/ca-certificates \
+ 		${DESTDIR}/etc/ssl/certs
+@@ -28,7 +27,7 @@
+ 	done
+ 
+ 	install -D -m644 update-ca-certificates.8 ${DESTDIR}/usr/share/man/man8/update-ca-certificates.8
+-	install -m755 update-ca-certificates ${DESTDIR}/usr/sbin
++	install -m755 update-ca-certificates ${DESTDIR}/usr/bin
+ 	install -m755 c_rehash ${DESTDIR}/usr/bin
+ 
+ clean:

@@ -8,7 +8,7 @@ license="GPL3 LGPL3"
 sources="https://sourceware.org/$name/ftp/$ver/$name-$ver.tar.bz2 \
 https://git.alpinelinux.org/aports/plain/main/elfutils/error.h \
 https://git.alpinelinux.org/aports/plain/main/elfutils/musl-macros.patch"
-mkdeps="gmake fts musl-obstack argp-standalone alpine-headers"
+mkdeps="alpine-headers argp-standalone fts musl-obstack gmake"
 files="$name-$ver.tar.bz2 error.h musl-macros.patch"
 
 unpack() {

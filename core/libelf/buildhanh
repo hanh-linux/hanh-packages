@@ -10,7 +10,7 @@ sources="https://sourceware.org/$_name/ftp/$ver/$_name-$ver.tar.bz2 \
 https://git.alpinelinux.org/aports/plain/main/elfutils/error.h \
 https://git.alpinelinux.org/aports/plain/main/elfutils/musl-macros.patch"
 depends="zlib"
-makedeps="gmake fts musl-obstack argp-standalone alpine-headers"
+mkdeps="gmake fts musl-obstack argp-standalone alpine-headers"
 files="$_name-$ver.tar.bz2 error.h musl-macros.patch"
 
 unpack() {

@@ -1,0 +1,21 @@
+--- dist/config.sub	2013-09-09 22:35:02.000000000 +0700
++++ ../../config.sub	2022-03-07 18:00:27.042452672 +0700
+@@ -124,7 +124,7 @@
+ # Here we must recognize all the valid KERNEL-OS combinations.
+ maybe_os=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\2/'`
+ case $maybe_os in
+-  nto-qnx* | linux-gnu* | linux-android* | linux-dietlibc | linux-newlib* | \
++  nto-qnx* | linux-gnu* | linux-musl* | linux-android* | linux-dietlibc | linux-newlib* | \
+   linux-uclibc* | uclinux-uclibc* | uclinux-gnu* | kfreebsd*-gnu* | \
+   knetbsd*-gnu* | netbsd*-gnu* | \
+   kopensolaris*-gnu* | \
+@@ -1384,6 +1384,9 @@
+ 	-linux-dietlibc)
+ 		os=-linux-dietlibc
+ 		;;
++	-linux-musl) 
++		os=-linux-musl 
++		;;
+ 	-linux*)
+ 		os=`echo $os | sed -e 's|linux|linux-gnu|'`
+ 		;;

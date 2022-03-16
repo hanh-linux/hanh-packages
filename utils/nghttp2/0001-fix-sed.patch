@@ -1,0 +1,22 @@
+Build with non-GNU Makefile build tools.
+--- contrib/Makefile.in	2022-03-09 18:27:49.084184705 +0700
++++ contrib/Makefile1.in	2022-03-09 18:27:38.797524024 +0700
+@@ -556,15 +556,15 @@
+ 
+ nghttpx-init: $(srcdir)/nghttpx-init.in
+ 	rm -f $@ $@.tmp
+-	$(edit) $< > $@.tmp
++	$(edit) nghttpx-init.in > $@.tmp
+ 	chmod +x $@.tmp
+ 	mv $@.tmp $@
+ 
+ nghttpx.service: $(srcdir)/nghttpx.service.in
+-	$(edit) $< > $@
++	$(edit) nghttpx.service.in > $@
+ 
+ nghttpx-upstart.conf: $(srcdir)/nghttpx-upstart.conf.in
+-	$(edit) $< > $@
++	$(edit) nghttpx-upstart.conf.in > $@
+ 
+ $(configfiles): Makefile
+ 

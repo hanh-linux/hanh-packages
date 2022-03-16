@@ -1,0 +1,37 @@
+name=curl
+ver=7.81.0
+desc="An URL retrieval utility and library"
+home="https://curl.haxx.se"
+license="MIT"
+contain="libcurl"
+depends="ca-certificates zstd zlib"
+sources="http://curl.haxx.se/download/$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
+
+unpack() {
+cd $workdir 
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile() {
+cd $workdir/$name-$ver
+# SSL is not working with cross-compilation, rather disable it
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr \
+	--enable-ipv6 \
+	--with-openssl \
+	--without-libidn2 \
+	--without-libssh2 \
+	--disable-ldaps \
+	--with-ca-path=/etc/ssl/certs || exit 1
+bmake
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+bmake DESTDIR=$pkgdir install
+bmake DESTDIR=$pkgdir install -C scripts
+}
+

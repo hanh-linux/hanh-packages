@@ -11,9 +11,9 @@ sources="https://github.com/llvm/llvm-project/releases/download/llvmorg-$ver/llv
 buildFlags="ninja/make/data"
 files="llvm-project-$ver.src.tar.xz"
 
-for x in $misc; do
+for arg in $misc; do
 
-case $misc in 
+case $arg in 
 	"ninja"	)	
 		cmd="ninja";
 		filetype="Ninja";;
@@ -21,13 +21,13 @@ case $misc in
 		cmd="gmake";
 		filetype="Unix Makefiles";;
 	"data"  ) 
+		cmd="data"
 		echo "Data build, ignoring";;
-	*	)
-		die "Mode $misc is not supported by this build file";;
 esac
 
 done
-
+ 
+test -z $cmd && die "Build type is empty! Please specify build type..."
 
 unpack() {
 # CMake supports several build systems, but we

@@ -1,0 +1,31 @@
+name=libarchive
+ver=3.6.0
+desc="Multi-format archive and compression library"
+home="https://libarchive.org/"
+license="BSD"
+depends="acl bzip2 xz gzip openssl zlib zstd"
+sources="https://github.com/libarchive/libarchive/releases/download/v$ver/libarchive-$ver.tar.xz"
+files="$name-$ver.tar.xz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile() {
+cd $workdir/$name-$ver
+# No static libraries due to sizeof(wchar_t) 
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr \
+	--without-xml2 \
+	--without-nettle \
+	--disable-static
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

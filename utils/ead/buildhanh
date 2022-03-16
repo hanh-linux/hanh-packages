@@ -1,0 +1,7 @@
+name=ead
+define_ask 
+
+pkgask() {
+echo With iwd, compile with flavor="full"
+ask_pkg iwd
+}

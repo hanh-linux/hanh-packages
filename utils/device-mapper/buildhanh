@@ -5,7 +5,7 @@ desc="Device mapper userspace library and tools"
 home="https://sourceware.org/dm/"
 license="GPL2 LGPL2.1"
 depends="libaio"
-mkdeps="bash gmake"
+mkdeps="bash"
 contains="libdevmapper libdevmapper-event"
 sources="https://mirrors.kernel.org/sourceware/lvm2/LVM2.$ver.tgz"
 attach="fix-stdio-usage.patch library_dir-default-config.patch       \
@@ -48,11 +48,11 @@ bash ./configure \
 		--enable-udev_rules --disable-readline \
 		CLDFLAGS="$LDFLAGS"
 # Build and install script are taken from Ataraxia Linux
-gmake SHELL=bash device-mapper 
+make SHELL=bash device-mapper 
 }
 
 mkpkg() {
 cd $workdir/$_name-$ver
-gmake -j1 SHELL=bash DESTDIR=$pkgdir install_device-mapper
+make -j1 SHELL=bash DESTDIR=$pkgdir install_device-mapper
 rm -rf $pkgdir/usr/sbin
 }

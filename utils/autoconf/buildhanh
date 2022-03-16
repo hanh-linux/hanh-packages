@@ -1,0 +1,27 @@
+name=autoconf
+ver=2.71
+desc="GNU tool for automatically configuring the source code"
+home="https://gnu.org/software/$name"
+license="GPL custom"
+depends="awk m4 perl sh diffutils"
+sources="https://ftp.gnu.org/pub/gnu/$name/$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr 
+make 
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

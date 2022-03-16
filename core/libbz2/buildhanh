@@ -1,0 +1,6 @@
+name=libbz2
+define_ask 
+
+pkgask() {
+ask_pkg bzip2
+}

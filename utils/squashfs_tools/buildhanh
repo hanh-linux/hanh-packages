@@ -4,7 +4,6 @@ desc="Tool for working with squashfs compression"
 home="https://github.com/plougher/$name"
 license="GPL2"
 depends="xz zstd"
-mkdeps="gmake"
 sources="https://github.com/plougher/$name/archive/refs/tags/$ver.tar.gz"
 files="$ver.tar.gz"
 
@@ -15,7 +14,7 @@ tar -xf $hanhdir/$ver.tar.gz
 
 compile() {
 cd $workdir/$name-$ver
-gmake -C $name \
+make -C $name \
 	GZIP_SUPPORT=1 \
 	XZ_SUPPORT=1 \
 	LZMA_XZ_SUPPORT=1 \
@@ -24,5 +23,5 @@ gmake -C $name \
 
 mkpkg() {
 cd $workdir/$name-$ver
-gmake -C $name install INSTALL_DIR=$pkgdir/bin
+make -C $name install INSTALL_DIR=$pkgdir/bin
 }

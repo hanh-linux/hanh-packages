@@ -1,0 +1,41 @@
+name=bash
+ver="5.1.016"
+desc="GNU Borune-again shell"
+home="https://gnu.org/softwares/bash"
+license="GPL"
+depends="musl netbsd-curses"
+sources="https://ftp.gnu.org/gnu/$name/$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
+buildFlags="sh"
+
+for arg in $misc; do
+	case $arg in 
+		sh ) contain=sh; echo contain=sh >> $hanhdir/.buildinfo;;
+	esac
+done
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz 
+}
+
+
+build() {
+cd $workdir/$name-$ver
+  ./configure \ 
+	  --host=$CHOST \
+	  --build=$CBUILD \
+	  --prefix=/usr \
+	  --without-curses \
+	  --disable-readline \
+	  --without-bash-malloc 
+make
+}
+
+
+package() {
+cd $workdir/$name-$ver
+make DESTDIR="$pkgdir" install
+test "$contain" = sh && ln -s bash "$pkgdir/usr/bin/sh"
+
+}

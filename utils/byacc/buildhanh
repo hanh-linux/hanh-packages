@@ -1,0 +1,31 @@
+name=byacc
+ver=20220128
+desc="Berkeley implementation of Yacc"
+home="https://invisible-island.net/byacc/byacc.html"
+depends="musl"
+license=custom
+contain=yacc
+sources="https://invisible-island.net/datafiles/release/byacc.tar.gz"
+files="$name.tar.gz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name.tar.gz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--prefix=/usr \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--program-prefix=b \
+	--enable-btyacc
+make 
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+ln -sf byacc $pkgdir/usr/bin/yacc
+}

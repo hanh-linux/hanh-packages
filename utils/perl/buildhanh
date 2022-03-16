@@ -1,0 +1,56 @@
+# See bug https://github.com/arsv/perl-cross/issues/125
+# Downgrade to 5.32.1
+
+name=perl 
+ver=5.32.1
+_crossver=1.3.6
+desc="Larry Wall's Practical Extraction and Report Language"
+home="http://www.perl.org"
+license="Artistic GPL2"
+depends="musl db gdbm"
+sources="http://www.cpan.org/src/5.0/$name-$ver.tar.gz \
+	https://github.com/arsv/perl-cross/releases/download/$_crossver/perl-cross-$_crossver.tar.gz" # cross-compile perl
+files="$name-$ver.tar.gz perl-cross-$_crossver.tar.gz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+tar -xf $hanhdir/perl-cross-$_crossver.tar.gz
+mv perl-cross-$_crossver/utils/* $name-$ver/utils 
+rm -rf perl-cross-$_crossver/utils/
+mv perl-cross-$_crossver/* $name-$ver/ 
+
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--host="$CHOST" \
+	--build="$CBUILD" \
+	--prefix=/usr \
+	-Dusethreads \
+	-Duselargefiles \
+	-Dcc="$CC" \
+	-Dcccdlflags='-fPIC' \
+	-Dcccdlflags='-fPIC' \
+	-Dlibswanted='c pthread gdbm db gdbm_compat' \
+	-Dccdlflags='-rdynamic' \
+	-Dprefix=/usr -Dvendorprefix=/usr \
+	-Dusethreads -Duseshrplib -Doptimize="${CFLAGS}" \
+	-Dprivlib=/usr/share/perl5/core_perl \
+	-Darchlib=/usr/lib/perl5/$ver/core_perl \
+	-Dsitelib=/usr/share/perl5/site_perl \
+	-Dsitearch=/usr/lib/perl5/$ver/site_perl \
+	-Dvendorlib=/usr/share/perl5/vendor_perl \
+	-Dvendorarch=/usr/lib/perl5/$ver/vendor_perl \
+	-Dscriptdir=/usr/bin/core_perl \
+	-Dsitescript=/usr/bin/site_perl \
+	-Dvendorscript=/usr/bin/vendor_perl \
+	-Dcf_by='Hanh' 
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR="$pkgdir" install
+}

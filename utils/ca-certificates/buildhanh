@@ -1,0 +1,51 @@
+# Used Alpine Linux build file with modification
+name=ca-certificates
+ver=20211220
+desc="Alpine fork of common CA certificates PEM files"
+home=https://www.mozilla.org/en-US/about/governance/policies/security-group/certs/
+license="MPL-2.0 MIT"
+depends="openssl"
+mkdeps="perl base-tools findutils"
+sources="https://gitlab.alpinelinux.org/alpine/ca-certificates/-/archive/$ver/ca-certificates-$ver.tar.bz2"
+attach="0001-Change-bindir.patch"
+files="${name}-$ver.tar.bz2 $attach"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/${name}-$ver.tar.bz2
+cd $name-$ver
+patch -Np0 -i $hanhdir/0001-Change-bindir.patch
+}
+
+compile() {
+cd $workdir/$name-$ver
+make || exit 1
+}
+
+mkpkg() {
+install -dm755 \
+	$pkgdir/etc/ca-certificates/update.d \
+	$pkgdir/usr/bin $pkgdir/usr/share/$name \
+	$pkgdir/usr/local/share/$name \
+	$pkgdir/etc/ssl/certs
+
+cd $workdir/$name-$ver 
+make DESTDIR=$pkgdir install || exit 1
+
+echo "Updating ca-certificates list..."
+cd "$pkgdir"/usr/share/ca-certificates
+
+echo "---ca-certificates list---"
+find . -name '*.crt' | sort | cut -b3-  
+echo "---end-of-list---"
+find . -name '*.crt' | sort | cut -b3- > $pkgdir/etc/ca-certificates.conf
+
+echo '#!/bin/sh' > $pkgdir/etc/$name/update.d/c_rehash 
+echo 'exec c_rehase /etc/ssl/certs' > $pkgdir/etc/$name/update.d/c_rehash 
+chmod 755 $pkgdir/etc/$name/update.d/c_rehash
+
+cat << EOF 
+After install the package, please run:
+update-ca-certificates --fresh
+EOF
+}

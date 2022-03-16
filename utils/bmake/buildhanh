@@ -1,0 +1,26 @@
+name=bmake
+ver=20220214
+desc="Portable version of NetBSD make tool"
+home="https://www.crufty.net/help/sjg/bmake.html"
+license="BSD"
+sources="https://www.crufty.net/ftp/pub/sjg/bmake-$ver.tar.gz"
+attach="0001-Ataraxia-lld-compatibility.patch 0002-disable-tests.patch"
+files="bmake-$ver.tar.gz $attach"
+
+unpack() {
+cd $workdir/
+tar -xf $hanhdir/bmake-$ver.tar.gz
+cd $name
+patch -Np0 -i $hanhdir/0001-Ataraxia-lld-compatibility.patch
+patch -Np0 -i $hanhdir/0002-disable-tests.patch
+}
+
+compile() {
+cd $workdir/$name
+./boot-strap --prefix=/usr op=build
+}
+
+mkpkg() {
+install -dm755 $pkgdir/usr/bin 
+install -Dm755 $workdir/linux5-x86_64/bmake $pkgdir/usr/bin
+}

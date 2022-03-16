@@ -1,0 +1,28 @@
+name=automake
+ver=1.15
+desc="GNU tool for automatically generating Makefile"
+home="https://gnu.org/software/$name"
+license="GPL custom"
+depends="perl sh"
+mkdeps="autoconf"
+sources="https://ftp.gnu.org/pub/gnu/$name/$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr 
+make 
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

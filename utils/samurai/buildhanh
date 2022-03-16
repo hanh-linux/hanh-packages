@@ -1,0 +1,24 @@
+name=samurai
+ver=1.2
+desc="A C99 ninja-compatible build tool"
+home=https://github.com/michaelforney/$name
+license="ISC Apache MIT"
+contain=ninja
+sources="https://github.com/michaelforney/samurai/releases/download/$ver/$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile() {
+cd $workdir/$name-$ver
+make  
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make PREFIX=/usr DESTDIR=$pkgdir install
+ln -sf samu $pkgdir/usr/bin/ninja
+}

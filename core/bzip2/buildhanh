@@ -1,0 +1,46 @@
+name=bzip2
+ver=1.0.8
+desc="A high-quality data compression program"
+home="https://sourceware.org/bzip2/"
+license="BSD"
+depends="musl sh"
+contain="libbz2"
+sources="https://sourceware.org/pub/bzip2/$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
+
+run() {
+echo $* 
+eval $*
+}
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile() {
+cd $workdir/$name-$ver
+bmake CC="$CC $CFLAGS $LDFLAGS"
+bmake -f Makefile-libbz2_so CC="$CC $CFLAGS $LDFLAGS" 
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+run install -dm755 $pkgdir/usr/bin 
+run install -Dm755 bzip2-shared $pkgdir/usr/bin/bzip2
+for binary in bzip2recover bzdiff bzgrep bzmore; do 
+	run install -Dm755 $binary $pkgdir/usr/bin/$binary 
+done
+for symlink in bunzip2 bzcat; do 
+	run ln -sf bzip2 $pkgdir/usr/bin/$symlink 
+done
+
+run install -dm755 $pkgdir/usr/lib
+run cp -r libbz2.so* $pkgdir/usr/lib
+for library in libbz2.so libbz2.so.1; do 
+	run ln -sf libbz2.so.$ver $pkgdir/usr/lib/$library 
+done
+
+run install -dm755 $pkgdir/usr/include
+run install -Dm644 bzlib.h $pkgdir/usr/include/bzlib.h
+}

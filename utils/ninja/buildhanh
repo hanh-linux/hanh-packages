@@ -1,0 +1,6 @@
+name=ninja
+define_ask 
+
+pkgask() {
+ask_pkg samurai 
+}

@@ -1,0 +1,6 @@
+name=yacc
+define_ask 
+
+pkgask() {
+ask_pkg byacc
+}

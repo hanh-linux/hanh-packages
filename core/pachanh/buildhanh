@@ -1,12 +1,14 @@
 name=pachanh
 _name=$name-new
-ver=2.0.1
+ver=2.0.2
 desc="Hanh Linux package manager"
 home="https://github.com/hanh-linux/pachanh-new"
 license="BSD"
 depends="sh base-tools"
 sources="https://github.com/hanh-linux/pachanh-new/archive/refs/tags/v$ver.tar.gz"
-files="v$ver.tar.gz"
+config="etc/hanh.conf"
+attach="hanh.conf"
+files="v$ver.tar.gz $attach"
 
 unpack() {
 cd $workdir
@@ -22,4 +24,5 @@ cd $workdir/$_name-$ver
 mkpkg() {
 cd $workdir/$_name-$ver
 ./install-script PREFIX=/usr SYSROOT=/ DESTDIR=$pkgdir action=INSTALL || true
+install -Dm644 $hanhdir/hanh.conf $pkgdir/etc/hanh.conf
 }

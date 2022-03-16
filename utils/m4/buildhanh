@@ -1,0 +1,27 @@
+name=m4
+ver=1.4.19
+desc="GNU implementation of the traditional Unix macro processor"
+home="https://www.gnu.org/software/m4/m4.html"
+license="GPL"
+depends="sh musl"
+sources="https://ftp.gnu.org/gnu/m4/$name-$ver.tar.xz"
+files="$name-$ver.tar.xz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr 
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make prefix=$pkgdir/usr install
+}

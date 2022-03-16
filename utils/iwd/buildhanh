@@ -3,15 +3,14 @@ ver=1.6
 desc="Lightweight internet wireless daemon"
 home="https://iwd.wiki.kernel.org/"
 license="LGPL"
-mkdeps="gmake linux-headers dbus libedit autoconf automake libtool"
+mkdeps="linux-headers dbus libedit autoconf automake libtool"
 sources="https://mirrors.edge.kernel.org/pub/linux/network/wireless/iwd-$ver.tar.gz"
 attach="0001-libedit.patch"
 files="$name-$ver.tar.gz 0001-libedit.patch"
 _args="--prefix=/usr \
 	--sysconfdir=/etc \
 	--disable-systemd-service"
-buildFlags="full"
-
+buildFlavor="full"
 
 unpack() {
 cd $workdir
@@ -25,7 +24,7 @@ autoreconf -fiv
 compile() {
 cd $workdir/$name-$ver
 eval ./configure $_args
-LDFLAGS="$LDFLAGS -ledit" gmake
+LDFLAGS="$LDFLAGS -ledit" make
 }
 
 compile_full() {
@@ -40,5 +39,5 @@ compile
 
 mkpkg() {
 cd $workdir/$name-$ver
-gmake DESTDIR=$pkgdir install
+make DESTDIR=$pkgdir install
 }

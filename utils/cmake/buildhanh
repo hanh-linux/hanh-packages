@@ -1,0 +1,101 @@
+# CMake cross-compile not working, don't use
+name=cmake
+ver=3.22.3
+_majorver=3.22
+desc="Cross-platform, open-source make system"
+home="https://www.cmake.org/"
+license="BSD3"
+mkdeps="bzip2 curl expat libarchive linux-headers \
+	libuv libcurses libterminfo nghttp2 xz zlib"
+buildFlags="cmake/bootstrap ninja/gmake parallel data"
+sources="https://cmake.org/files/v$_majorver/$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
+
+for arg in $misc; do 
+	case $arg in	
+		cmake ) buildgen=cmake;
+			test -z $nodeps && check_deps cmake;;
+		cross ) _crossopt="-DCMAKE_LIBRARY_PATH=$SYSROOT/usr/lib \
+			-DCMAKE_INCLUDE_PATH=$SYSROOT/usr/include \
+			-DCMAKE_FIND_ROOT_PATH=$SYSROOT \
+			-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
+			-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY";;
+		ninja ) cmd=ninja;
+			filetype="Ninja";
+			test -z $nodeps && check_deps ninja;;
+		gmake ) cmd=gmake;
+			filetype="Unix Makefiles";
+			test -z $nodeps && check_mkdeps gmake;;
+		bootstrap ) buildgen="bootstrap";;
+		parallel ) _p="--parallel $(nproc)";;
+		data ) echo "Data build! Exiting...";cmd=data;buildgen=data;;
+	esac
+done
+
+echo "Use cmake for cross-compilation otherwise build may fail"
+echo "Overwriting CXXFLAGS by default, export ADDITIONAL_CXXFLAGS if you need additional compiler flags"
+
+test -z $cmd && die "Please specify build type gmake/ninja"
+if test -z $buildgen; then
+       	echo "Select cmake by default"
+	buildgen=cmake
+	test -z $nodeps && check_deps cmake
+fi
+
+if test "$buildgen" = "cmake"; then
+	test -n "$p" && echo parallel option will not be used with cmake 
+fi
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+cd $name-$ver
+patch -Np1 -i $hanhdir/0001-fix-c++11.patch
+mkdir build
+sed -i '/"lib64"/s/64//' Modules/GNUInstallDirs.cmake
+}
+
+compile() {
+# CXXFLAGS="-O3 -lc++" just works 
+export CXXFLAGS="-O3 -lc++ $ADDITIONAL_CXXFLAGS"
+cd $workdir/$name-$ver
+mkdeps="bzip2 curl expat libarchive linux-headers \
+	libuv libcurses libterminfo nghttp2 xz zlib"
+if test "$buildgen" = "cmake"; then
+	cmake -S . -B build $_crossopt \
+		-DCMAKE_LINKER="$LD" \
+		-DCMAKE_C_COMPILER="$CC" \
+		-DCMAKE_CXX_COMPILER="$CXX" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=MinSizeRel \
+		-DCMAKE_DOC_DIR=/share/doc/cmake \
+		-DCMAKE_MAN_DIR=/share/man \
+		-DCMAKE_USE_SYSTEM_LIBARCHIVE=ON \
+		-DCMAKE_USE_SYSTEM_LIBUV=ON \
+		-DCMAKE_USE_SYSTEM_EXPAT=ON \
+		-DCMAKE_USE_SYSTEM_CURL=ON \
+		-DCMAKE_USE_SYSTEM_LIBRHASH=OFF \
+		-DCMAKE_USE_SYSTEM_JSONCPP=OFF \
+		-Wno-dev -G "$filetype"	
+	cd build
+elif test "$buildgen" = "bootstrap"; then 
+	cd build
+	../bootstrap \
+		--prefix=/usr \
+		--datadir=/share/$name \
+		--docdir=/share/doc/cmake \
+		--mandir=/share/man \
+		--no-system-jsoncpp \
+		--no-system-librhash \
+		--no-qt-gui \
+		--system-libs \
+		--generator="$filetype" $_p
+fi
+eval $cmd || exit 1
+}
+
+mkpkg() {
+cd $workdir/$name-$ver/build
+eval DESTDIR=$pkgdir $cmd install || exit 1
+}
+

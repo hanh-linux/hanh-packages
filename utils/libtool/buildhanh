@@ -1,0 +1,28 @@
+name=libtool
+ver=2.4.6
+desc="GNU library that supports script"
+home="https://gnu.org/software/$name"
+license="GPL"
+depends="sh musl"
+sources="https://ftp.gnu.org/pub/gnu/$name/$name-$ver.tar.xz"
+contain="libltdl"
+files="$name-$ver.tar.xz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr 
+make 
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,29 @@
+name=gmake
+ver=4.3
+desc="GNU tool to build software from Makefile"
+home="https://www.gnu.org/software/make"
+license="GPL"
+sources="https://ftp.gnu.org/gnu/make/make-$ver.tar.gz"
+files="make-$ver.tar.gz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/make-$ver.tar.gz
+}
+
+compile() {
+cd $workdir/make-$ver
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr \
+	--disable-nls \
+	--without-guile 
+make
+}
+
+mkpkg() {
+cd $workdir/make-$ver
+make DESTDIR=$pkgdir install
+mv $pkgdir/usr/bin/make $pkgdir/usr/bin/gmake
+}

@@ -1,5 +1,3 @@
-# Experimental, not ready to for reproduction 
-
 name=limine
 ver=v2.55
 desc="BIOS/UEFI x86_64 bootloader"

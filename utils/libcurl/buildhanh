@@ -1,0 +1,6 @@
+name=libcurl 
+define_ask 
+
+pkgask() {
+ask_pkg curl
+}

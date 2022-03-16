@@ -7,7 +7,7 @@ desc="A bootloader for Linux"
 home="https://alioth.debian.org/projects/lilo/"
 license='BSD'
 depends="device-mapper"
-mkdeps="gmake perl bin86"
+mkdeps="perl bin86 posix-core-command"
 sources="https://alioth-archive.debian.org/releases/lilo/Lilo/${ver}/${name}-${ver}.tar.gz "
 attach="01_makefile-adds.patch 03_keytab-lilo.8-debian-based.patch\
        	05_readme.disk-change.patch 06_notinteractive.patch\
@@ -38,12 +38,12 @@ compile() {
 		-e '/strip/d;s|^	make|	$(MAKE)|g' \
 		-e '/images install/d' \
 		-e '/images all/d'
-  gmake CC="$CC" CFLAGS="$CFLAGS -g" all 
+  make CC="$CC" CFLAGS="$CFLAGS -g" all 
 }
 
 mkpkg() {
   cd $workdir/$name-$ver
-  gmake DESTDIR=$pkgdir SBIN_DIR=/usr/bin USRSBIN_DIR=/usr/bin install
+  make DESTDIR=$pkgdir SBIN_DIR=/usr/bin USRSBIN_DIR=/usr/bin install
 
   # Remove Debian specific files
   rm -rf "${pkgdir}"/etc/initramfs

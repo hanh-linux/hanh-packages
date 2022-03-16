@@ -1,0 +1,32 @@
+name=db
+ver=5.3.28
+desc="The Berkeley DB embedded database system"
+home="https://www.oracle.com/technology/software/products/berkeley-db/index.html"
+license="custom"
+depends="musl"
+sources="https://download.oracle.com/berkeley-db/$name-$ver.tar.gz"
+attach="0001-Alpine-atomic.patch 0002-Fix-build-musl.patch"
+files="$name-$ver.tar.gz $attach"
+
+unpack(){
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+cd $name-$ver
+patch -Np0 -i $hanhdir/0001-Alpine-atomic.patch
+patch -Np0 -i $hanhdir/0002-Fix-build-musl.patch
+}
+
+compile(){
+cd $workdir/$name-$ver/build_unix
+../dist/configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr \
+	--enable-shared 
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver/build_unix 
+make DESTDIR=$pkgdir install
+}

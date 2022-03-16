@@ -1,0 +1,43 @@
+name=nghttp2
+ver=1.47.0
+desc="Implementation of framing layer of HTTP/2 as a reusable C library"
+home="https://nghttp2.org/"
+license="MIT"
+depends="openssl zlib"
+config="etc/nghttpx/nghttpx.conf"
+sources="https://github.com/nghttp2/nghttp2/releases/download/v$ver/nghttp2-$ver.tar.xz"
+attach="0001-fix-sed.patch"
+files="$name-$ver.tar.xz $attach"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+cd $name-$ver
+patch -Np0 -i $hanhdir/0001-fix-sed.patch
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--prefix=/usr \
+	--disable-static \
+	--enable-lib-only \
+	--disable-examples \
+	--without-libxml2 \
+	--without-jansson \
+	--without-libev \
+	--without-systemd \
+	--without-cython \
+	--without-libngtcp2 \
+	--without-libnghttp3 \
+	--without-libbpf
+bmake
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+bmake DESTDIR=$pkgdir install
+install -Dm644 nghttpx.conf.sample "$pkgdir/etc/nghttpx/nghttpx.conf"
+}
