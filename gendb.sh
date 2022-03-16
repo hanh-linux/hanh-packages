@@ -5,8 +5,8 @@ rm -rf $dirrepo/$dirrepo.database $workdir/repocon
 mkdir -p $workdir/repocon
 for x in $(ls); do
 	dirnow=$(pwd)
-	mkdir -p $workdir/repocon/$x
 	if test -d $x; then
+	mkdir -p $workdir/repocon/$x
 	cd $x/ 
 	hanhbuild -g data || exit 1
 	mv data $workdir/repocon/$x/data || exit 1
