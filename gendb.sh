@@ -1,7 +1,7 @@
 workdir=$(pwd)
 dirrepo=$*
 cd $dirrepo || exit 1 
-rm -rf $dirrepo/$dirrepo.database $workdir/repocon $dirrepo/$dirrepo.bad $dirrepo.lessbad
+rm -rf $dirrepo/$dirrepo.database $workdir/repocon 
 mkdir -p $workdir/repocon
 for x in $(ls); do
 	dirnow=$(pwd)
