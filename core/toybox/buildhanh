@@ -31,8 +31,8 @@ for bindir in bin sbin usr/sbin; do
 done
 
 for bin in $(ls usr/bin/); do
-	if test -f $SYSROOT/usr/bin/$bin; then
-		if test "$(readlink $SYSROOT/usr/bin/$bin)" != "../../bin/toybox"; then
+	if test -f $sysroot/usr/bin/$bin; then
+		if test "$(readlink $sysroot/usr/bin/$bin)" != "../../bin/toybox"; then
 			rm -rvf usr/bin/$bin
 		fi
 	fi
