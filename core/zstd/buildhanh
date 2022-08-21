@@ -1,11 +1,12 @@
 # Reference: Glaucus Linux, Arch Linux
 
 name=zstd
-ver=1.5.1
+ver=1.5.2
 desc="Zstandard - a fast decompression archive type"
 home="https://github.com/facebook/$name"
 license="GPL2 BSD"
 depends="musl xz zlib"
+contain="pzstd"
 mkdeps="gmake"
 sources="https://github.com/facebook/$name/releases/download/v$ver/$name-$ver.tar.gz"
 files="$name-$ver.tar.gz"
@@ -19,6 +20,7 @@ compile() {
 cd $workdir/$name-$ver
 export CFLAGS=$(echo $CFLAGS | sed "s/-fno-exceptions/ /g")
 gmake 
+gmake -C contrib/pzstd 
 }
 
 mkpkg() {

@@ -7,7 +7,7 @@ desc="Ulitities for monitoring the system processes"
 home="https://gitlab.com/procps-ng/procps"
 license="GPL LGPL"
 depends="musl netbsd-curses"
-attach="0001-Gentoo-w-musl.patch"
+attach="0001-fix-musl-stuff.patch"
 sources="https://prdownloads.sourceforge.net/$name/$name-$ver.tar.xz"
 files="$name-$ver.tar.xz $attach"
 
@@ -15,19 +15,19 @@ unpack() {
 cd $workdir/
 tar -xf $hanhdir/$name-$ver.tar.xz
 cd $workdir/$_dirname-$ver
-patch -Np1 -i $hanhdir/0001-Gentoo-w-musl.patch
+patch -Np0 -i $hanhdir/0001-fix-musl-stuff.patch
 }
 
 compile() {
 cd $workdir/$_dirname-$ver
 export LDFLAGS="$LDFLAGS -lcurses -lterminfo -static" # For finding netbsd-curses
+export CFLAGS="$CFLAGS -DHAVE_UTMPX_H" # for w support 
 ./configure \
 	--host=$CHOST \
 	--build=$CBUILD \
 	--prefix=/usr \
 	--sbindir=/usr/bin \
-	--disable-kill \
-	--disable-w 
+	--disable-kill  
 make
 }
 

@@ -1,5 +1,5 @@
 name=toybox
-ver=0.8.6
+ver=0.8.8
 desc="Multi-call small binary"
 home="https://github.com/landley/toybox"
 sources="https://codeload.github.com/landley/toybox/tar.gz/refs/tags/$ver"
@@ -15,8 +15,9 @@ tar -xf $hanhdir/$ver
 }
 
 compile () {
+cd $workdir/$name-$ver
 cp -r $hanhdir/config $workdir/$name-$ver/.config
-gmake oldconfig 
+gmake oldconfig
 gmake 
 }
 
@@ -28,7 +29,7 @@ for bindir in bin sbin usr/sbin; do
 	mv $bindir/* usr/bin
 	rm -rf $bindir
 done
-echo $SYSROOT
+
 for bin in $(ls usr/bin/); do
 	if test -f $SYSROOT/usr/bin/$bin; then
 		if test "$(readlink $SYSROOT/usr/bin/$bin)" != "../../bin/toybox"; then
@@ -37,12 +38,11 @@ for bin in $(ls usr/bin/); do
 	fi
 done
 
-for userbin in $misc; do
+for userbin in $CONFLICTS; do
 	rm -rvf usr/bin/$userbin
 done
 
 echo "Warning:"
 echo "If you are building packages that overwrites toybox symlinks"
-echo "then add the conflict binaries to the build command-line:"
-echo "hanhbuild -b -t=mkpkg (-f) <conflicting binaries>"
+echo "then add the conflict binaries to CONFLICTS=<conflict binaries>"
 }

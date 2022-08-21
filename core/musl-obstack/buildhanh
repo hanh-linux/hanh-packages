@@ -1,5 +1,5 @@
 name="musl-obstack"
-ver=1.2.2
+ver=1.2.3
 desc="Fork of glibc's obstack"
 home="https://github.com/void-linux/musl-obstack"
 license="BSD"
@@ -16,7 +16,11 @@ cd $name-$ver
 
 compile() {
 cd $workdir/$name-$ver
-./configure --prefix=/usr
+CFLAGS="$CFLAGS -fPIC"
+./configure \
+	--prefix=/usr \
+	--host=$CHOST \
+	--build=$CBUILD 
 make
 }
 

@@ -1,0 +1,25 @@
+name=make_ext4fs 
+ver=20220820 
+desc="Iglunix fork of Android make_ext4fs with stripped components" 
+home="https://github.com/iglunix/make_ext4fs"
+license="Apache 2.0" 
+depends="musl zlib"
+mkdeps="git"
+
+unpack() {
+cd $workdir/ 
+git clone https://github.com/iglunix/make_ext4fs.git 
+}
+
+compile() {
+cd $workdir/$name/
+make CC="$CC" CFLAGS="$CFLAGS" AR="$AR rcs"
+}
+
+mkpkg() {
+cd $workdir/$name 
+install -dm755 $pkgdir/usr/bin 
+install -dm755 $pkgdir/usr/lib
+install -Dm755 ./make_ext4fs $pkgdir/usr/bin
+install -Dm644 core/libsparse/libsparse.a $pkgdir/usr/lib
+}

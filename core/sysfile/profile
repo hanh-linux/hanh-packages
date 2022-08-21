@@ -3,6 +3,3 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 alias ls="ls --color"
 
-# These lines should be used only in installation disc
-alias about="cat /root/README || echo Not a installation disc"
-alias howto-install="cat /root/INSTALL || echo Not a installation disc"

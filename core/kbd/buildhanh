@@ -2,19 +2,17 @@
 # to write an own file
 
 name=kbd
-ver=2.4.0
+ver=2.5.1
 desc="Keytable files and keyboard utilities"
 home="http://www.kbd-project.org"
 license='GPL'
 depends="musl"
 sources="https://www.kernel.org/pub/linux/utils/${name}/${name}-${ver}.tar.gz"
-attach="error.h"
-files="$name-$ver.tar.gz $attach"
+files="$name-$ver.tar.gz"
 
 unpack() {
   cd $workdir
   tar -xf $hanhdir/$name-$ver.tar.gz
-  cp -r $hanhdir/error.h $name-$ver
 }
 
 compile() {

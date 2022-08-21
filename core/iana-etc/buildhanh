@@ -1,7 +1,7 @@
 # Reference: Arch Linux, Linux From Scratch
 
 name=iana-etc
-ver=20210611
+ver=20220812
 desc="Data for network protocols and services"
 home="https://iana.org/protocols"
 license="public domain"

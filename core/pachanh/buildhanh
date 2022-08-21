@@ -1,13 +1,13 @@
 name=pachanh
 _name=$name-new
-ver=2.0.2
+ver=2.1
 desc="Hanh Linux package manager"
 home="https://github.com/hanh-linux/pachanh-new"
 license="BSD"
-depends="sh base-tools"
+depends="sh base-tools confuse"
 sources="https://github.com/hanh-linux/pachanh-new/archive/refs/tags/v$ver.tar.gz"
-config="etc/hanh.conf"
-attach="hanh.conf"
+config="etc/hanh.conf etc/hanhbuild.conf"
+attach="hanh.conf hanhbuild.conf"
 files="v$ver.tar.gz $attach"
 
 unpack() {
@@ -18,11 +18,14 @@ tar -xf $hanhdir/v$ver.tar.gz
 compile(){
 cd $workdir/$_name-$ver
 ./install-script action=CLEAN
-./install-script PREFIX=/usr SYSROOT=/ action=COMPILE || true
+./install-script PREFIX=/usr SYSROOT=/ action=COMPILE || true 
 }
 
 mkpkg() {
 cd $workdir/$_name-$ver
 ./install-script PREFIX=/usr SYSROOT=/ DESTDIR=$pkgdir action=INSTALL || true
-install -Dm644 $hanhdir/hanh.conf $pkgdir/etc/hanh.conf
+./install-script PREFIX=/usr SYSROOT=/ DESTDIR=$pkgdir action=INSTALL_MIRROR || true # install mirror
+for x in hanh hanhbuild; do 
+	install -Dm644 $hanhdir/$x.conf $pkgdir/etc/ 
+done
 }

@@ -18,7 +18,7 @@ tar -xf $hanhdir/$ver.tar.gz
 compile() {
 cd $workdir/$name-$ver
 ./configure --prefix=/usr \
-       --zlib-compat
+       --zlib-compat 
 gmake 
 }
 

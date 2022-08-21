@@ -1,10 +1,10 @@
 name=linux-headers
 _name=linux
-ver=5.15.16 
+ver=5.19.1 
 desc="Linux kernel headers"
 home="https://kernel.org"
 license="GPL"
-mkdeps="gmake"
+mkdeps="gmake rsync" #install target needs rsync
 sources="https://cdn.kernel.org/pub/linux/kernel/v5.x/$_name-$ver.tar.xz"
 files="$_name-$ver.tar.xz"
 

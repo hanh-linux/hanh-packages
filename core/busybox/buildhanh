@@ -1,9 +1,9 @@
 name=busybox
-ver=1.34.1
+ver=1.35.0
 desc="A multi-call binary"
 home="https://busybox.net/"
 license="GPL"
-contain="mdev mkfs.fat wget"
+contain="mdev mkfs.fat wget vi"
 mkdeps="gmake"
 attach="0001-no-overwriting-build-command.patch "
 sources="https://busybox.net/downloads/$name-$ver.tar.bz2"
@@ -17,10 +17,6 @@ for arg in $misc; do
 			sleep 2 ;
 			CROSS="CROSS_COMPILE=$CHOST-"
 			;;
-		"base-tools") 
-			contain="$contain base-tools";
-			echo contain=\"$contain\" >> $hanhdir/.buildinfo
-			toybox_conflict="yes";;
 	esac
 done
 
@@ -50,13 +46,11 @@ mkpkg() {
 cd $workdir/$name-$ver
 gmake ARCH=$CARCH $CROSS \
 	CONFIG_PREFIX="$pkgdir" install 
-if test -z toybox_conflict; then
-	rm -rf $pkgdir/usr/bin/* $pkgdir/usr/sbin $pkgdir/sbin 
-	mv $pkgdir/bin/busybox $pkgdir/usr/bin/busybox
-	rm -rf $pkgdir/bin
-	rm -rf $pkgdir/linuxrc
-	for file in mdev mkfs.vfat wget; do
-		ln -sf busybox $pkgdir/usr/bin/$file
-	done
-fi
+rm -rf $pkgdir/usr/bin/* $pkgdir/usr/sbin $pkgdir/sbin 
+mv $pkgdir/bin/busybox $pkgdir/usr/bin/busybox
+rm -rf $pkgdir/bin
+rm -rf $pkgdir/linuxrc
+for file in mdev mkfs.vfat wget vi; do
+	ln -sf busybox $pkgdir/usr/bin/$file
+done
 }

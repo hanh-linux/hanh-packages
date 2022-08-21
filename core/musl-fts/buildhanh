@@ -1,7 +1,6 @@
-name=fts
-_name=musl-fts
+name=musl-fts
 ver=1.2.7
-desc="fts functions that are not provided by musl"
+desc="NetBSD implementations of fts functions"
 home="https://github.com/void-linux/musl-fts"
 license="GPL"
 depends="musl"
@@ -12,19 +11,22 @@ needed="v$ver.tar.gz"
 unpack() {
 cd $workdir
 tar -xf $hanhdir/v$ver.tar.gz
-cd $_name-$ver
+cd $name-$ver
 ./bootstrap.sh
 }
 
 compile() {
-cd $workdir/$_name-$ver
+cd $workdir/$name-$ver
 # We need -fPIC flag so that elfutils won't fail in compiling libdw.so  
-CFLAGS="$CFLAGS -fPIC"
-./configure --prefix=/usr 
+export CFLAGS="$CFLAGS -fPIC"
+./configure \
+	--prefix=/usr \
+	--host=$CHOST \
+	--build=$CBUILD
 make
 }
 
 mkpkg() {
-cd $workdir/$_name-$ver
+cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 }

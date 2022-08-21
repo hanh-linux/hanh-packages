@@ -1,0 +1,27 @@
+name=confuse 
+ver=3.3
+desc="Config parser library"
+home="https://github.com/libconfuse/libconfuse/"
+license="ISC"
+mkdeps="flex yacc"
+sources="https://github.com/libconfuse/libconfuse/releases/download/v$ver/$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
+
+unpack() {
+cd $workdir/
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure --prefix=/usr \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--enable-shared
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

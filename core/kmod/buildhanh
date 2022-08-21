@@ -1,25 +1,25 @@
 # Reference: Glaucus Linux, Linux From Scratch, Void Linux
 name=kmod
-ver=29-1
-_ver=29
+ver=30
 desc="Kernel module management tools"
 home=https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 license="GPL"
 depends="musl"
-sources="https://cdn.kernel.org/pub/linux/utils/kernel/$name/$name-$_ver.tar.xz"
+sources="https://cdn.kernel.org/pub/linux/utils/kernel/$name/$name-$ver.tar.xz"
 attach="0001-Void-stdout.patch"
-files="$name-$_ver.tar.xz $attach"
+buildFlavor="full"
+files="$name-$ver.tar.xz $attach"
 _args="--prefix=/usr --sysconfdir=/etc" 
 
 unpack() {
 cd $workdir
-tar -xf $hanhdir/$name-$_ver.tar.xz
-cd $name-$_ver
+tar -xf $hanhdir/$name-$ver.tar.xz
+cd $name-$ver
 patch -Np1 -i $hanhdir/0001-Void-stdout.patch
 }
 
 compile(){
-cd $workdir/$name-$_ver
+cd $workdir/$name-$ver
 eval ./configure "${_args}"
 make
 }
@@ -33,7 +33,7 @@ compile
 }
 
 mkpkg() {
-cd $workdir/$name-$_ver
+cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
 cd $pkgdir
 for target in depmod insmod lsmod modinfo modprobe rmmod; do

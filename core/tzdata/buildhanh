@@ -1,5 +1,5 @@
 name=tzdata
-ver=2021e
+ver=2022c
 desc="Sources for timezone and daylight saving time data"
 home="https://www.iana.org/time-zones"
 license="public domain"

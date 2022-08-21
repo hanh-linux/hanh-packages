@@ -1,5 +1,5 @@
 name=nano
-ver=5.8
+ver=6.4
 desc="Lightweight editor"
 home="https://nano-editor.org"
 license="GPL"

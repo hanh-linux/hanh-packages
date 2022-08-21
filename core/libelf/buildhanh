@@ -2,29 +2,26 @@
 
 _name=elfutils
 name=libelf
-ver=0.186
+ver=0.187
 desc="ELF libraries"
 home="https://sourceware.org/elfutils"
 license="GPL3 LGPL3"
 sources="https://sourceware.org/$_name/ftp/$ver/$_name-$ver.tar.bz2 \
-https://git.alpinelinux.org/aports/plain/main/elfutils/error.h \
 https://git.alpinelinux.org/aports/plain/main/elfutils/musl-macros.patch"
-depends="zlib"
-mkdeps="gmake fts musl-obstack argp-standalone alpine-headers"
-files="$_name-$ver.tar.bz2 error.h musl-macros.patch"
+depends="zlib musl"
+mkdeps="gmake musl-fts musl-obstack argp-standalone"
+files="$_name-$ver.tar.bz2 musl-macros.patch"
 
 unpack() {
 cd $workdir
 tar -xf $hanhdir/$_name-$ver.tar.bz2
-cd $_name-$ver/ 
-for x in lib etc; do
- cp -r $hanhdir/error.h $x
-done
+cd $_name-$ver/
 patch -Np1 -i $hanhdir/musl-macros.patch
 }
 
 compile() {
 CFLAGS="$CFLAGS -Wno-error -fPIC"
+# No debuginfod in libelf, just runtimes
 cd $workdir/$_name-$ver
 ./configure \
 	--host=$CHOST\

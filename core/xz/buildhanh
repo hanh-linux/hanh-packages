@@ -1,5 +1,5 @@
 name=xz
-ver=5.2.5
+ver=5.2.6
 desc="Compression tools"
 home="https://tukaani.org/xz"
 license="GPL LGPL custom"
@@ -14,7 +14,9 @@ tar -xf $hanhdir/$name-$ver.tar.gz
 
 compile() {
 cd $workdir/$name-$ver
-./configure --prefix=/usr
+./configure --prefix=/usr \
+	--host=$CHOST \
+	--build=$CBUILD 
 make
 }
 

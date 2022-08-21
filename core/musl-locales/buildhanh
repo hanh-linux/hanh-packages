@@ -15,7 +15,6 @@ if test "$CBUILD" != "$CHOST"; then
 		-DCMAKE_HOST_SYSTEM_NAME=Linux"
 fi
 
-
 for arg in $misc; do
 case $arg in 
 	make )
@@ -54,6 +53,6 @@ eval $cmd -C build || exit 1
 }
 
 mkpkg() {
-cd $name 
-eval DESTDIR=$pkgdir $cmd -C build || exit 1 
+cd $workdir/$name 
+eval DESTDIR=$pkgdir $cmd -C build install || exit 1 
 }

@@ -19,6 +19,7 @@ sed -e "224s/rounds/min_rounds/" -i libmisc/salt.c
 
 compile() {
 cd $workdir/$name-$ver
+# Need /usr/lib/libattr.la or build will fail 
 ./configure \
 	--host=$CHOST \
 	--build=$CBUILD \

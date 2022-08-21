@@ -1,0 +1,64 @@
+name=libclangrt_builtins
+_name=compiler-rt
+ver=14.0.6 
+desc="Clang builtins runtime library"
+home="https://compiler-rt.llvm.org/"
+license="custom:Apache 2.0 with LLVM Exception"
+mkdeps="cmake"
+sources="https://github.com/llvm/llvm-project/releases/download/llvmorg-$ver/$_name-$ver.src.tar.xz"
+files="$_name-$ver.src.tar.xz" 
+buildFlags="ninja/make/data"
+
+for arg in $misc; do
+
+case $arg in 
+	"ninja"	)	
+		cmd="ninja";
+		filetype="Ninja";;
+	"make"	)
+		cmd="gmake";
+		filetype="Unix Makefiles";;
+	"data"  ) 
+		cmd="data"
+		echo "Data build, ignoring";;
+esac
+
+done
+ 
+test -z $cmd && die "Build type is empty! Please specify build type..."
+
+unpack() {
+if test -z "$nodeps"; then
+	check_deps $cmd
+fi
+
+cd $workdir
+tar -xf $hanhdir/$_name-$ver.src.tar.xz
+mv $_name-$ver.* $_name-$ver
+}
+
+compile() {
+cd $workdir/$_name-$ver
+cmake -S . -B build \
+	-DCMAKE_INSTALL_PREFIX="/usr" \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DLLVM_INCLUDE_BENCHMARKS=OFF \
+	-DCOMPILER_RT_BUILD_BUILTINS=ON \
+	-DCOMPILER_RT_BUILD_CRT=ON \
+	-DCOMPILER_RT_BUILD_LIBFUZZER=OFF \
+	-DCOMPILER_RT_BUILD_MEMPROF=OFF \
+	-DCOMPILER_RT_BUILD_ORC=OFF \
+	-DCOMPILER_RT_BUILD_PROFILE=OFF \
+	-DCOMPILER_RT_BUILD_SANITIZERS=OFF \
+	-DCOMPILER_RT_DEFAULT_TARGET_TRIPLE=$CHOST \
+	-DCOMPILER_RT_BUILD_XRAY=OFF \
+	-DCOMPILER_RT_INSTALL_PATH="/usr/lib/clang/$vllvm" \
+	-Wno-dev -G "$filetype"
+eval $cmd -C build || exit 1
+}
+
+mkpkg() {
+cd $workdir/$_name-$ver
+eval DESTDIR=$pkgdir $cmd -C build install || exit 1
+}
+
