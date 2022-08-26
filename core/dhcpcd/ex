@@ -1,5 +1,0 @@
-mkae() {
-echo a
-}
-
-type mkae && echo "sick"
