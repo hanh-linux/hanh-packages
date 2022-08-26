@@ -1,0 +1,160 @@
+--- client/display.c	2022-07-16 00:08:06.000000000 +0700
++++ client/display1.c	2022-08-24 23:42:33.483735667 +0700
+@@ -31,8 +31,8 @@
+ #include <sys/ioctl.h>
+ #include <unistd.h>
+ 
+-#include <readline/history.h>
+-#include <readline/readline.h>
++#include <histedit.h>
++#include <editline/readline.h>
+ #include <ell/ell.h>
+ 
+ #include "client/agent.h"
+@@ -71,15 +71,26 @@
+ {
+ 	struct saved_input *input;
+ 
++#ifdef RL_STATE_DONE
+ 	if (RL_ISSTATE(RL_STATE_DONE))
+ 		return NULL;
++#endif
+ 
+ 	input = l_new(struct saved_input, 1);
+ 
+ 	input->point = rl_point;
++#ifdef rl_copy_text
+ 	input->line = rl_copy_text(0, rl_end);
++#endif
++
++#ifdef rl_save_prompt
+ 	rl_save_prompt();
++#endif
++
++#ifdef rl_replace_line
+ 	rl_replace_line("", 0);
++#endif 
++
+ 	rl_redisplay();
+ 
+ 	return input;
+@@ -90,8 +101,13 @@
+ 	if (!input)
+ 		return;
+ 
++#ifdef rl_restore_prompt
+ 	rl_restore_prompt();
++#endif
++
++#ifdef rl_replace_line
+ 	rl_replace_line(input->line, 0);
++#endif
+ 	rl_point = input->point;
+ 	rl_forced_update_display();
+ 
+@@ -576,7 +592,11 @@
+ 	char line[LINE_LEN];
+ 	size_t index;
+ 	size_t line_used;
++#ifdef rl_copy_text
+ 	char *input = rl_copy_text(0, rl_end);
++#else 
++	char *input;
++#endif
+ 
+ 	prompt = l_strdup_printf("%s%s\n", IWD_PROMPT, input);
+ 	l_free(input);
+@@ -749,9 +769,13 @@
+ 	 * The following sequence of rl_* commands forces readline to properly
+ 	 * update its internal state and re-display the new prompt.
+ 	 */
++#ifdef rl_save_prompt
+ 	rl_save_prompt();
++#endif
+ 	rl_redisplay();
++#ifdef rl_restore_prompt
+ 	rl_restore_prompt();
++#endif
+ 	rl_forced_update_display();
+ }
+ 
+@@ -785,12 +809,17 @@
+ 		agent_saved_input = l_new(struct saved_input, 1);
+ 
+ 		agent_saved_input->point = rl_point;
++#ifdef rl_copy_text
+ 		agent_saved_input->line = rl_copy_text(0, rl_end);
++#endif
+ 		rl_set_prompt("");
++#ifdef rl_replace_line
+ 		rl_replace_line("", 0);
++#endif
+ 		rl_redisplay();
+-
++#ifdef rl_erase_empty_line
+ 		rl_erase_empty_line = 0;
++#endif
+ 		rl_set_prompt(prompt);
+ 	} else {
+ 		rl_callback_handler_install(prompt, readline_callback);
+@@ -817,7 +846,7 @@
+ 
+ 	if (!agent_saved_input)
+ 		return;
+-
++#if 0
+ 	if (display_refresh.cmd) {
+ 		char *text = rl_copy_text(0, rl_end);
+ 		char *prompt = l_strdup_printf(COLOR_BLUE("%s ")
+@@ -827,10 +856,15 @@
+ 		l_queue_push_tail(display_refresh.redo_entries, prompt);
+ 		display_refresh.undo_lines++;
+ 	}
++#endif
+ 
++#ifdef rl_erase_empty_line
+ 	rl_erase_empty_line = 1;
++#endif
+ 
++#ifdef rl_replace_line
+ 	rl_replace_line(agent_saved_input->line, 0);
++#endif
+ 	rl_point = agent_saved_input->point;
+ 
+ 	l_free(agent_saved_input->line);
+@@ -897,10 +931,14 @@
+ 									NULL);
+ 
+ 	rl_attempted_completion_function = command_completion;
++#ifdef rl_completion_display_matches_hook
+ 	rl_completion_display_matches_hook = display_completion_matches;
++#endif
+ 
+ 	rl_completer_quote_characters = "\"";
++#ifdef rl_erase_empty_line
+ 	rl_erase_empty_line = 1;
++#endif
+ 	rl_callback_handler_install("Waiting for IWD to start...",
+ 							readline_callback);
+ 
+--- client/command.c	2022-07-16 00:08:06.000000000 +0700
++++ client/command1.c	2022-08-24 23:42:50.917083242 +0700
+@@ -29,7 +29,7 @@
+ #include <string.h>
+ #include <getopt.h>
+ #include <ell/ell.h>
+-#include <readline/readline.h>
++#include <editline/readline.h>
+ 
+ #include "client/command.h"
+ #include "client/display.h"
+@@ -323,7 +323,9 @@
+ 		goto done;
+ 	}
+ 
++#ifdef rl_copy_text
+ 	prompt = rl_copy_text(0, rl_end);
++#endif
+ 
+ 	family = strtok_r(prompt, " ", &args);
+ 	if (!family)

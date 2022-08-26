@@ -1,0 +1,38 @@
+# Reference and pre-configured files taken from: Ataraxia Linux
+name=wpa_supplicant
+ver=2.10
+desc="A utility providing key negotiation for WPA wireless networks"
+home="https://w1.fi/wpa_supplicant/"
+license="GPL"
+depends="libnl openssl"
+sources="https://w1.fi/releases/$name-$ver.tar.gz \
+         https://w1.fi/security/2020-2/0001-P2P-Fix-copying-of-secondary-device-types-for-P2P-gr.patch"
+attach="config 0001-P2P-Fix-copying-of-secondary-device-types-for-P2P-gr.patch"
+needed="$name-$ver.tar.gz 0001-P2P-Fix-copying-of-secondary-device-types-for-P2P-gr.patch config"
+
+echo Specify linker path in LDFLAGS or it will use your host
+echo linker then mess up. 
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+cd $name-$ver
+patch -Np1 -i $hanhdir/0001-P2P-Fix-copying-of-secondary-device-types-for-P2P-gr.patch
+cd $name
+}
+
+_config=config
+
+compile() {
+
+cd $workdir/$name-$ver/$name
+cp -r $hanhdir/$_config .config
+export CFLAGS="$CFLAGS -D_GNU_SOURCE"
+V=1 gmake CC=$CC LD=$LD PREFIX=/usr BINDIR=/usr/bin
+}
+
+mkpkg() {
+cd $workdir/$name-$ver/$name
+gmake DESTDIR="$pkgdir" PREFIX=/usr BINDIR=/usr/bin install
+}
+

@@ -38,15 +38,15 @@ make
 mkpkg() {
 cd $workdir/$name-$ver
 make DESTDIR=$pkgdir install
-
+find $pkgdir/usr/bin
 rm -rf $pkgdir/usr/sbin/logoutd 
 
 for a in login chsh chfn sg nologin; do 
-	rm -rf $pkgdir/usr/bin/$x 
+	rm -rf $pkgdir/usr/bin/$a 
 done
 
 for a in vipw vigr; do 
-	rm -rf $pkgdir/usr/sbin/$x
+	rm -rf $pkgdir/usr/sbin/$a
 done
 
 mv $pkgdir/usr/bin/newgrp $pkgdir/usr/bin/sg

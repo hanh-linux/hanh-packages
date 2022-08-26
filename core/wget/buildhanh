@@ -1,0 +1,6 @@
+name=wget
+define_ask 
+
+pkgask() {
+ask_pkg busybox
+}

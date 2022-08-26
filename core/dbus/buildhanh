@@ -1,0 +1,47 @@
+name=dbus
+ver=1.14.0
+desc="Freedesktop.org message bus system"
+url="https://www.freedesktop.org/Software/dbus"
+license="AFL2.1 GPL2"
+contain="libdbus"
+mkdeps="autoconf automake libtool autoconf-archive expat" 
+sources="https://gitlab.freedesktop.org/$name/$name/-/archive/$name-$ver/$name-$name-$ver.tar.gz"
+files="$name-$name-$ver.tar.gz"
+
+unpack(){
+cd $workdir
+tar -xf $hanhdir/$name-$name-$ver.tar.gz
+mv $name-$name-$ver $name-$ver
+cd $name-$ver
+NOCONFIGURE=1 ./autogen.sh
+}
+
+_args="     --build=$CBUILD                      \
+	    --host=$CHOST                        \
+            --prefix=/usr                        \
+            --sysconfdir=/etc                    \
+            --localstatedir=/var                 \
+            --disable-doxygen-docs               \
+            --disable-xml-docs                   \
+            --disable-static                     \
+            --with-systemduserunitdir=no         \
+            --with-systemdsystemunitdir=no       \
+            --docdir=/usr/share/doc/$name-$ver   \
+            --with-console-auth-dir=/run/console \
+            --with-system-pid-file=/run/dbus/pid \
+            --disable-systemd                    \
+            --with-x=no                          \
+            --disable-modular-tests              \
+            --with-system-socket=/run/dbus/system_bus_socket \
+"
+
+compile() {
+cd $workdir/$name-$ver
+eval ./configure $_args
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

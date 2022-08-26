@@ -2,17 +2,17 @@
 # LLVM is used by default
 
 name=linux
-ver=5.15.16
+ver=5.19.1
 desc="Linux kernel"
 home="https://kernel.org"
 license="GPL"
 sources="https://cdn.kernel.org/pub/linux/kernel/v5.x/$name-$ver.tar.xz"
 depends="kmod initcpio"
-mkdeps="argp-standalone musl-obstack fts alpine-headers \
+mkdeps="argp-standalone musl-obstack musl-fts musl \
 	bc linux-headers openssl awk bash \
 	gmake yacc perl base-tools" 
-attach="config-lts.x86_64"
-files="$name-$ver.tar.xz config-lts.x86_64 $attach"
+attach="config.x86_64 0001-ethan-make-yacc-POSIX.patch"
+files="$name-$ver.tar.xz $attach"
 buildFlags="cross"
 
 for arg in $misc; do
@@ -37,15 +37,16 @@ unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
 cd $name-$ver
+patch -Np0 -i $hanhdir/0001-ethan-make-yacc-POSIX.patch
 $_make mrproper
-cp -r $hanhdir/config-lts.x86_64 .config
+cp -r $hanhdir/config.x86_64 .config
 $_make olddefconfig
 }
 
 compile() {
 cd $workdir/$name-$ver 
 $_make \
-	ARCH=$CARCH $CROSS 
+	ARCH=$CARCH $CROSS -j4 
 }
 
 mkpkg() {
@@ -54,7 +55,7 @@ install -dm755 $pkgdir/boot/
 
 cd $workdir/$name-$ver
 $_make \
-	ARCH=$CARCH $CROSS \
+	ARCH=$CARCH $CROSS -j4 \
 	INSTALL_MOD_PATH="$pkgdir/usr" \
 	INSTALL_MOD_STRIP=1 \
 	modules_install

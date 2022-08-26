@@ -1,0 +1,24 @@
+#!/bin/sh
+
+pre_install() {
+id -u dhcpcd > /dev/null 2>&1
+if test "$?" != "0"; then 
+	if test $(id -u) != 0; then 
+	       echo "Not root, skipping"
+	       exit 0 
+	fi       
+
+	groupadd -g 52 dhcpcd        &&
+	useradd  -c 'dhcpcd PrivSep' \
+        	 -d /var/lib/dhcpcd  \
+        	 -g dhcpcd           \
+        	 -s /bin/false     \
+        	 -u 52 dhcpcd &&
+	chown -v dhcpcd:dhcpcd /var/lib/dhcpcd 
+fi
+} 
+
+type $* > /dev/null 2>&1 
+if test "$?" == "0"; then 
+	$* || exit 1
+fi

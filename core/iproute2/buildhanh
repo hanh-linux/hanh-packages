@@ -1,0 +1,44 @@
+name=iproute2
+ver=5.19.0
+desc="IP Routing Utilities"
+home="https://www.linuxfoundation.org/collaborate/workgroups/networking/iproute2"
+license="GPL2"
+# libcap must be compiled with -fPIC iproute2 or 
+# it will complain about undefined reference
+# iproute2 changed it ax25.h path, no need libax25
+depends="musl libelf"
+mkdeps="libmnl libcap libtirpc"
+sources="https://kernel.org/pub/linux/utils/net/$name/$name-$ver.tar.xz"
+attach="0001-Alpine-fix-MIN.patch"
+files="$name-$ver.tar.xz $attach"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+cd $name-$ver
+sed -i 's/-Werror//' Makefile
+# Use LFS build guide for disabling not supported things in 
+sed -i /ARPD/d Makefile
+rm -fv man/man8/arpd.8
+sed -i 's/.m_ipt.o//' tc/Makefile
+patch -Np0 -i $hanhdir/0001-Alpine-fix-MIN.patch
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure 
+CFLAGS="-D_GNU_SOURCE -fPIC $CFLAGS" make SBINDIR=/usr/bin
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR="$pkgdir" SBINDIR=/usr/bin install
+
+# Use Arch Linux command to install missing libnetlink
+install -Dm0644 include/libnetlink.h $pkgdir/usr/include/libnetlink.h
+install -Dm0644 lib/libnetlink.a $pkgdir/usr/lib/libnetlink.a
+
+# Move ip command to avoid conflict 
+mv $pkgdir/usr/bin/ip $pkgdir/usr/bin/iproute2-ip
+}
+

@@ -1,28 +1,28 @@
 name=pachanh
 _name=$name-new
-ver=2.1
+ver=2.1.1
 desc="Hanh Linux package manager"
 home="https://github.com/hanh-linux/pachanh-new"
 license="BSD"
 depends="sh base-tools confuse"
-sources="https://github.com/hanh-linux/pachanh-new/archive/refs/tags/v$ver.tar.gz"
+mkdeps="git"
 config="etc/hanh.conf etc/hanhbuild.conf"
 attach="hanh.conf hanhbuild.conf"
-files="v$ver.tar.gz $attach"
+files="$attach"
 
 unpack() {
 cd $workdir
-tar -xf $hanhdir/v$ver.tar.gz
+git clone https://github.com/hanh-linux/pachanh-new
 }
 
 compile(){
-cd $workdir/$_name-$ver
+cd $workdir/$_name
 ./install-script action=CLEAN
 ./install-script PREFIX=/usr SYSROOT=/ action=COMPILE || true 
 }
 
 mkpkg() {
-cd $workdir/$_name-$ver
+cd $workdir/$_name
 ./install-script PREFIX=/usr SYSROOT=/ DESTDIR=$pkgdir action=INSTALL || true
 ./install-script PREFIX=/usr SYSROOT=/ DESTDIR=$pkgdir action=INSTALL_MIRROR || true # install mirror
 for x in hanh hanhbuild; do 

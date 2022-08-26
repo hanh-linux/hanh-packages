@@ -1,0 +1,30 @@
+name=libedit
+ver="20210910-3.1"
+desc="Command line editor library provides generic line editing"
+home="https://thrysoee.dk/editline/"
+license="BSD"
+sources="https://thrysoee.dk/editline/$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile() {
+cd $workdir/$name-$ver
+# Source: (https://patchwork.ozlabs.org/project/buildroot/patch/1452127277-9538-1-git-send-email-sergio.prado@e-labworks.com/)
+# musl is ISO 10646 compliant but doesn't define __STDC_ISO_10646__,
+# so let's define it manually 
+export CFLAGS="$CFLAGS -D__STDC_ISO_10646__=201103L"
+./configure --prefix=/usr \
+	--disable-examples \
+	--host=$CHOST \
+	--build=$CBUILD 
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

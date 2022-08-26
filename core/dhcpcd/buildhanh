@@ -1,0 +1,40 @@
+# Reference: Artix Linux
+name=dhcpcd
+ver=9.4.1
+desc="DHCP cilent daemon"
+home="https://roy.marples.name/projects/dhcpcd"
+license="BSD"
+depends="musl sh"
+contain="dhcp-cilent"
+attach="hook"
+sources="https://roy.marples.name/downloads/$name/$name-$ver.tar.xz"
+needed="$name-$ver.tar.xz hook"
+hook=hook
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.xz
+}
+
+compile() {
+cd $workdir/$name-$ver
+CFLAGS="$CFLAGS -D_GNU_SOURCE -DHAVE_PRINTF_M"
+./configure --host=$CHOST \
+      --prefix=/usr \
+      --sysconfdir=/etc \
+      --sbindir=/usr/bin \
+      --libexecdir=/usr/lib/dhcpcd \
+      --dbdir=/var/lib/dhcpcd \
+      --runstatedir=/run \
+      --privsepuser=dhcpcd \
+      --enable-ipv6 \
+      --without-dev \
+      --without-udev
+make
+}
+
+mkpkg(){
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+install -dvm755 $pkgdir/var/lib/dhcpcd
+}

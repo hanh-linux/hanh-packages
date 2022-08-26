@@ -1,0 +1,45 @@
+name=iwd
+ver=1.29
+desc="Lightweight internet wireless daemon"
+home="https://iwd.wiki.kernel.org/"
+license="LGPL"
+depends="dbus"
+mkdeps="linux-headers libedit autoconf automake libtool"
+sources="https://mirrors.edge.kernel.org/pub/linux/network/wireless/iwd-$ver.tar.gz"
+attach="0001-libedit.patch"
+files="$name-$ver.tar.gz 0001-libedit.patch"
+_args="--prefix=/usr \
+	--sysconfdir=/etc \
+	--disable-systemd-service"
+buildFlavor="full"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+cd $name-$ver
+sed 's+readline/readline.h+editline/readline.h+g' -i configure.ac
+patch -Np0 -i $hanhdir/0001-libedit.patch
+autoreconf -fiv
+}
+
+compile() {
+export READLINE_LIBS="-ledit"
+cd $workdir/$name-$ver
+eval ./configure $_args
+LDFLAGS="$LDFLAGS -ledit" make
+}
+
+compile_full() {
+contain="ead"
+echo contain=\"ead\" >> $hanhdir/.buildinfo
+_args="$_args \
+	--enable-sim-hardcoded \
+	--enable-wired \
+	--enable-tools"
+compile
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,10 @@
+--- ip/ipstats.c	2022-08-03 01:36:33.000000000 +0700
++++ ip/ipstats.c1	2022-08-26 06:43:47.327841024 +0700
+@@ -5,6 +5,7 @@
+ #include "list.h"
+ #include "utils.h"
+ #include "ip_common.h"
++#define MIN(a,b) (((a)<(b))?(a):(b))
+ 
+ struct ipstats_stat_dump_filters {
+ 	/* mask[0] filters outer attributes. Then individual nests have their

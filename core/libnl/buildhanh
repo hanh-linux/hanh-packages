@@ -1,0 +1,29 @@
+# Reference: Linux From Scratch
+name=libnl
+ver=3.7.0
+_gitver=3_7_0
+desc="A collection of libraries providing APIs to netlink protocol"
+license="LGPL2"
+home="https://github.com/thom311/libnl"
+sources="https://github.com/thom311/libnl/releases/download/$name$_gitver/$name-$ver.tar.gz"
+files="$name-$ver.tar.gz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.gz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure --prefix=/usr \
+	--sysconfdir=/etc/ \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--with-sysroot=$sysroot
+V=1 make  
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}

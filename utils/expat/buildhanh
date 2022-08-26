@@ -1,5 +1,5 @@
 name=expat
-ver=2.4.1
+ver=2.4.8
 desc="XML Parser library written in C"
 home="http://www.libexpat.org/"
 license="MIT"
@@ -15,7 +15,9 @@ compile() {
 cd $workdir/$name-$ver
 ./configure \
 	--prefix=/usr \
-	--enable-static
+	--enable-static \
+	--host=$CHOST \
+	--build=$CBUILD
 make
 }
 

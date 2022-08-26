@@ -1,0 +1,4 @@
+bash, cpio, nano, gzip: 
+GNU packages that are not required by any packages 
+device-mapper, lvm2, libaio: 
+Will be moved back when I got the patch for POSIX build

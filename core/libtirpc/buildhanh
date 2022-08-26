@@ -1,0 +1,29 @@
+name=libtirpc
+ver=1.3.3
+desc="Transport Independent RPC library (SunRPC replacement)"
+home="https://sourceforge.net/projects/libtirpc/"
+mkdeps="autoconf automake libtool linux-headers"
+sources="https://udomain.dl.sourceforge.net/project/$name/$name/$ver/$name-$ver.tar.bz2"
+files="$name-$ver.tar.bz2"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-$ver.tar.bz2
+cd $name-$ver
+autoreconf -fiv
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure --prefix=/usr \
+	--host=$CHOST \
+	--build=$CBUILD \
+	--sysconf=/etc \
+	--disable-gssapi
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR="$pkgdir" install
+}

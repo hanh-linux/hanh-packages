@@ -5,7 +5,7 @@ desc="Multicall binary for initramfs"
 home="https://busybox.net"
 attach="0001-no-overwriting-build-command.patch"
 license="GPL"
-depends="gen-initramfs"
+depends=""
 sources="https://busybox.net/downloads/$_name-$ver.tar.bz2"
 files="$_name-$ver.tar.bz2 $attach"
 

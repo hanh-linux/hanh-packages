@@ -1,0 +1,18 @@
+name=openrc-services 
+ver=08262022
+desc="Fork of artix/openrc-services for Hanh Linux packages"
+home="https://github.com/hanh-linux/openrc-services"
+license="GPL"
+attach="install-sv"
+mkdeps="git"
+files="$attach"
+task="mkpkg"
+
+mkpkg() {
+svdir=$pkgdir/usr/share/$name
+install -dm755 $svdir
+git clone $home $svdir
+rm -rf $svdir/.git
+install -dm755 $pkgdir/usr/bin
+install -Dm755 $hanhdir/install-sv $pkgdir/usr/bin/install-sv
+}
