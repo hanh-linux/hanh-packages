@@ -32,8 +32,15 @@ done
 
 for bin in $(ls usr/bin/); do
 	if test -f $sysroot/usr/bin/$bin; then
-		if test "$(readlink $sysroot/usr/bin/$bin)" != "../../bin/toybox"; then
-			rm -rvf usr/bin/$bin
+		link=$(readlink $sysroot/usr/bin/$bin) 
+		if test -n "$link"; then 
+			if test "$(basename $link)" != "toybox"; then 
+				rm -rvf $pkgdir/usr/bin/$bin 
+			fi
+		else
+			if test "$bin" != "toybox"; then
+				rm -rvf $pkgdir/usr/bin/$bin
+			fi
 		fi
 	fi
 done

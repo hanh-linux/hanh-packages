@@ -308,7 +308,7 @@ CONFIG_WGET=y
 # Linux Standard Base commands
 #
 CONFIG_DMESG=y
-# CONFIG_GZIP is not set
+CONFIG_GZIP=y
 CONFIG_GUNZIP=y
 CONFIG_ZCAT=y
 CONFIG_HOSTNAME=y

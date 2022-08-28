@@ -23,12 +23,12 @@ fi
 svdir="$sysroot/$prefix/share/openrc-services/"
 
 for x in $*; do
-	if ! test -f $svdir/$x/; then
+	if ! test -d $svdir/$x/; then
 		echo "Service $x not found!"
 		exit 1
 	fi
-	install -Dvm755 $svdir/$x/$x.initd $sysroot/etc/init.d/$x 
-	if test -f $svdir/$x/$x.confd; then
-		install -Dvm755 $svdir/$x/$x.confd $sysroot/etc/conf.d/$x
+	install -Dvm755 $svdir/$x/init.d/$x $sysroot/etc/init.d/$x 
+	if test -f $svdir/$x/conf.d/$x; then
+		install -Dvm755 $svdir/$x/conf.d/$x $sysroot/etc/conf.d/$x
 	fi
 done
