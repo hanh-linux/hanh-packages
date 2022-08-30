@@ -1,4 +1,4 @@
-name=mdev
+name=less
 define_ask 
 
 pkgask() {
