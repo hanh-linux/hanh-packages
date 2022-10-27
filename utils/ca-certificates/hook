@@ -1,0 +1,16 @@
+#!/bin/sh
+
+post_remove() {
+find -L $sysroot/etc/ssl/certs -maxdepth 1 -type l -delete
+rmdir $sysroot/etc/ssl/certs 2>/dev/null || true
+} 
+
+post_install() {
+/usr/sbin/update-ca-certificates --fresh  &> /dev/null
+exit 0
+}
+
+type $* > /dev/null 2>&1 
+if test "$?" == "0"; then 
+	$* || exit 1
+fi

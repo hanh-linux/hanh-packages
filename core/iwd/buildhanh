@@ -10,6 +10,8 @@ attach="0001-libedit.patch"
 files="$name-$ver.tar.gz 0001-libedit.patch"
 _args="--prefix=/usr \
 	--sysconfdir=/etc \
+	--localstatedir=/var \
+	--libexecdir=/usr/lib/iwd \
 	--disable-systemd-service"
 buildFlavor="full"
 

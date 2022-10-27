@@ -1,0 +1,153 @@
+Make m4 use system error.h (or result in a conflict)
+--- src/m4.c	2022-09-18 16:16:37.154222056 +0700
++++ src/m4.c1	2022-09-18 16:16:26.793702181 +0700
+@@ -24,6 +24,7 @@
+ #include <getopt.h>
+ #include <limits.h>
+ #include <signal.h>
++#include <error.h>
+ 
+ #include "c-stack.h"
+ #include "configmake.h"
+--- lib/verror.c	2022-09-18 16:28:08.011372875 +0700
++++ lib/verror.c1	2022-09-18 16:27:55.854184290 +0700
+@@ -25,7 +25,7 @@
+ #include <stdarg.h>
+ #include <stdlib.h>
+ 
+-#include "error.h"
++#include <error.h>
+ #include "xvasprintf.h"
+ 
+ #if ENABLE_NLS
+--- lib/chdir-long.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/chdir-long.c1	2022-09-18 23:37:36.042139490 +0700
+@@ -210,7 +210,7 @@
+ #if TEST_CHDIR
+ 
+ # include "closeout.h"
+-# include "error.h"
++# include <error.h>
+ 
+ int
+ main (int argc, char *argv[])
+--- lib/clean-temp.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/clean-temp.c1	2022-09-18 23:37:53.878704974 +0700
+@@ -37,7 +37,7 @@
+ 
+ #include "clean-temp-simple.h"
+ #include "clean-temp-private.h"
+-#include "error.h"
++#include <error.h>
+ #include "fatal-signal.h"
+ #include "asyncsafe-spin.h"
+ #include "pathmax.h"
+--- lib/clean-temp-simple.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/clean-temp-simple.c1	2022-09-18 23:38:13.255261455 +0700
+@@ -29,7 +29,7 @@
+ #include <string.h>
+ #include <unistd.h>
+ 
+-#include "error.h"
++#include <error.h>
+ #include "fatal-signal.h"
+ #include "asyncsafe-spin.h"
+ #include "glthread/lock.h"
+--- lib/closein.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/closein.c1	2022-09-18 23:38:27.894795511 +0700
+@@ -29,7 +29,7 @@
+ 
+ #include "close-stream.h"
+ #include "closeout.h"
+-#include "error.h"
++#include <error.h>
+ #include "exitfail.h"
+ #include "freadahead.h"
+ #include "quotearg.h"
+--- lib/closeout.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/closeout.c1	2022-09-18 23:38:34.734540369 +0700
+@@ -29,7 +29,7 @@
+ #define _(msgid) gettext (msgid)
+ 
+ #include "close-stream.h"
+-#include "error.h"
++#include <error.h>
+ #include "exitfail.h"
+ #include "quotearg.h"
+ 
+--- lib/error.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/error.c1	2022-09-18 23:38:45.750801361 +0700
+@@ -21,7 +21,7 @@
+ # include <config.h>
+ #endif
+ 
+-#include "error.h"
++#include <error.h>
+ 
+ #include <stdarg.h>
+ #include <stdio.h>
+--- lib/execute.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/execute.c1	2022-09-18 23:38:54.030500671 +0700
+@@ -32,7 +32,7 @@
+ #include <sys/wait.h>
+ 
+ #include "canonicalize.h"
+-#include "error.h"
++#include <error.h>
+ #include "fatal-signal.h"
+ #include "filename.h"
+ #include "findprog.h"
+--- lib/os2-spawn.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/os2-spawn.c1	2022-09-18 23:39:00.703594252 +0700
+@@ -30,7 +30,7 @@
+ #include <errno.h>
+ 
+ #include "cloexec.h"
+-#include "error.h"
++#include <error.h>
+ #include "gettext.h"
+ 
+ #define _(str) gettext (str)
+--- lib/spawn-pipe.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/spawn-pipe.c1	2022-09-18 23:39:08.943301336 +0700
+@@ -33,7 +33,7 @@
+ #include <unistd.h>
+ 
+ #include "canonicalize.h"
+-#include "error.h"
++#include <error.h>
+ #include "fatal-signal.h"
+ #include "filename.h"
+ #include "findprog.h"
+--- lib/wait-process.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/wait-process.c1	2022-09-18 23:39:17.839655582 +0700
+@@ -29,7 +29,7 @@
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ 
+-#include "error.h"
++#include <error.h>
+ #include "fatal-signal.h"
+ #include "xalloc.h"
+ #include "gettext.h"
+--- lib/xalloc-die.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/xalloc-die.c1	2022-09-18 23:39:26.342693967 +0700
+@@ -22,7 +22,7 @@
+ 
+ #include <stdlib.h>
+ 
+-#include "error.h"
++#include <error.h>
+ #include "exitfail.h"
+ 
+ #include "gettext.h"
+--- lib/xprintf.c	2021-04-23 03:28:47.000000000 +0700
++++ lib/xprintf.c1	2022-09-18 23:39:36.745671214 +0700
+@@ -20,7 +20,7 @@
+ 
+ #include <errno.h>
+ 
+-#include "error.h"
++#include <error.h>
+ #include "exitfail.h"
+ #include "gettext.h"

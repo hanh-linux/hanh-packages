@@ -4,12 +4,18 @@ desc="GNU implementation of the traditional Unix macro processor"
 home="https://www.gnu.org/software/m4/m4.html"
 license="GPL"
 depends="sh musl"
+mkdeps="autoconf automake libtool help2man"
 sources="https://ftp.gnu.org/gnu/m4/$name-$ver.tar.xz"
-files="$name-$ver.tar.xz"
+attach="0001-fix-system-stuff.patch"
+files="$name-$ver.tar.xz $attach"
 
 unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
+cd $name-$ver
+patch -Np0 -i $hanhdir/0001-fix-system-stuff.patch
+rm -rf lib/error.h
+autoreconf -fiv
 }
 
 compile() {

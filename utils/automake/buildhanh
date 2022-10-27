@@ -1,5 +1,5 @@
 name=automake
-ver=1.15
+ver=1.16.5
 desc="GNU tool for automatically generating Makefile"
 home="https://gnu.org/software/$name"
 license="GPL custom"

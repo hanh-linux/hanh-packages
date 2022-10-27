@@ -1,0 +1,45 @@
+name=sqlite
+ver=3390400
+_year=2022
+desc="C library that implements an SQL database engine"
+home="https://www.sqlite.org"
+license="blessing"
+depends="zlib"
+sources="https://sqlite.org/$_year/$name-autoconf-$ver.tar.gz"
+files="$name-autoconf-$ver.tar.gz"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/$name-autoconf-$ver.tar.gz
+mv $name* $name-$ver
+}
+
+compile() {
+cd $workdir/$name-$ver
+_opts="-DSQLITE_ENABLE_FTS4 \
+	-DSQLITE_ENABLE_FTS3_PARENTHESIS \
+	-DSQLITE_ENABLE_FTS3 \
+	-DSQLITE_ENABLE_FTS5 \
+	-DSQLITE_ENABLE_COLUMN_METADATA \
+	-DSQLITE_SECURE_DELETE \
+	-DSQLITE_ENABLE_UNLOCK_NOTIFY \
+	-DSQLITE_ENABLE_RTREE \
+	-DSQLITE_ENABLE_GEOPOLY \
+	-DSQLITE_USE_URI \
+	-DSQLITE_ENABLE_DBSTAT_VTAB \
+	-DSQLITE_MAX_VARIABLE_NUMBER=250000"
+
+export CFLAGS="$CFLAGS $_opts"
+./configure \
+		--prefix=/usr \
+		--enable-dynamic-extensions \
+		--enable-fts3 \
+		--disable-readline \
+		--enable-threadsafe
+make 
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR="$pkgdir" install
+}

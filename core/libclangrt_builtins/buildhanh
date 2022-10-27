@@ -1,8 +1,11 @@
+# Too lazy to modify build tree, so let just add more provided library to contain
+
 name=libclangrt_builtins
 _name=compiler-rt
 ver=14.0.6 
 desc="Clang builtins runtime library"
 home="https://compiler-rt.llvm.org/"
+contain="libclangrt_profile"
 license="custom:Apache 2.0 with LLVM Exception"
 mkdeps="cmake"
 sources="https://github.com/llvm/llvm-project/releases/download/llvmorg-$ver/$_name-$ver.src.tar.xz"
@@ -48,7 +51,7 @@ cmake -S . -B build \
 	-DCOMPILER_RT_BUILD_LIBFUZZER=OFF \
 	-DCOMPILER_RT_BUILD_MEMPROF=OFF \
 	-DCOMPILER_RT_BUILD_ORC=OFF \
-	-DCOMPILER_RT_BUILD_PROFILE=OFF \
+	-DCOMPILER_RT_BUILD_PROFILE=ON \
 	-DCOMPILER_RT_BUILD_SANITIZERS=OFF \
 	-DCOMPILER_RT_DEFAULT_TARGET_TRIPLE=$CHOST \
 	-DCOMPILER_RT_BUILD_XRAY=OFF \

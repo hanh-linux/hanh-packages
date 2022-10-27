@@ -1,6 +1,6 @@
-# Used Alpine Linux build file with modification
+# Used Alpine Linux build file and hook with modification
 name=ca-certificates
-ver=20211220
+ver=20220614
 desc="Alpine fork of common CA certificates PEM files"
 home=https://www.mozilla.org/en-US/about/governance/policies/security-group/certs/
 license="MPL-2.0 MIT"
@@ -9,6 +9,7 @@ mkdeps="perl base-tools findutils"
 sources="https://gitlab.alpinelinux.org/alpine/ca-certificates/-/archive/$ver/ca-certificates-$ver.tar.bz2"
 attach="0001-Change-bindir.patch"
 files="${name}-$ver.tar.bz2 $attach"
+hook=hook
 
 unpack() {
 cd $workdir
@@ -43,9 +44,4 @@ find . -name '*.crt' | sort | cut -b3- > $pkgdir/etc/ca-certificates.conf
 echo '#!/bin/sh' > $pkgdir/etc/$name/update.d/c_rehash 
 echo 'exec c_rehase /etc/ssl/certs' > $pkgdir/etc/$name/update.d/c_rehash 
 chmod 755 $pkgdir/etc/$name/update.d/c_rehash
-
-cat << EOF 
-After install the package, please run:
-update-ca-certificates --fresh
-EOF
 }

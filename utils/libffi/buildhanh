@@ -1,5 +1,5 @@
 name=libffi
-ver=3.4.2
+ver=3.4.3
 desc="Portable foreign function interface library"
 home="https://github.com/libffi/libffi"
 license="MIT"

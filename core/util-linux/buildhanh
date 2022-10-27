@@ -9,8 +9,7 @@ license="GPL"
 mkdeps="netbsd-curses"
 sources="https://www.kernel.org/pub/linux/utils/util-linux/v${_ver}/$name-$ver.tar.xz"
 files="$name-$ver.tar.xz"
-
-echo "Set GETROOT=<binary to get root> for chgrp permission" 
+ 
 unpack() {
 cd $workdir
 tar -xf $hanhdir/$name-$ver.tar.xz
@@ -47,8 +46,12 @@ make
 mkpkg() {
 cd $workdir/$name-$ver
 # util-linux requires root permission for chgrp
-if test -z "$GETROOT"; then
-	GETROOT=doas
+if test -z $GETROOT; then
+	echo "Enter command for root permission (default: doas)"
+	read GETROOT
+	if test -z "$GETROOT"; then
+		GETROOT="doas"
+	fi
 fi
 
 eval $GETROOT make DESTDIR=$pkgdir install

@@ -1,5 +1,5 @@
 name=bmake
-ver=20220214
+ver=20220909
 desc="Portable version of NetBSD make tool"
 home="https://www.crufty.net/help/sjg/bmake.html"
 license="BSD"

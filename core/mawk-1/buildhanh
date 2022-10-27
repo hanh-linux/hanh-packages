@@ -1,0 +1,33 @@
+# Reference: AUR, Glaucus Linux
+name=mawk
+_date=20200120
+_ver=1.3.4
+ver="$_ver-$_date"
+desc="An interpreter for the AWK Programming Language"
+home="http://invisible-island.net/mawk/"
+license="GPL2"
+sources="https://invisible-island.net/datafiles/release/$name.tar.gz"
+contain="awk"
+depends="musl"
+files="$name.tar.gz"
+
+unpack() {
+cd $workdir/
+tar -xf $hanhdir/$name.tar.gz
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure --prefix=/usr \
+	--without-man2html \
+	--host=$CHOST \
+	--build=$CBUILD 
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+cd $pkgdir/usr/bin
+ln -sf mawk awk 
+}

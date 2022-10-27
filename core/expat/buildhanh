@@ -1,0 +1,27 @@
+name=expat
+ver=2.4.9
+desc="XML Parser library written in C"
+home="http://www.libexpat.org/"
+license="MIT"
+sources="https://downloads.sourceforge.net/project/expat/expat/$ver/expat-$ver.tar.bz2"
+needed="expat-$ver.tar.bz2"
+
+unpack() {
+cd $workdir
+tar -xf $hanhdir/expat-$ver.tar.bz2
+}
+
+compile() {
+cd $workdir/$name-$ver
+./configure \
+	--prefix=/usr \
+	--enable-static \
+	--host=$CHOST \
+	--build=$CBUILD
+make
+}
+
+mkpkg() {
+cd $workdir/$name-$ver
+make DESTDIR=$pkgdir install
+}
